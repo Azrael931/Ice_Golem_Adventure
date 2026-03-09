@@ -1,12 +1,12 @@
 import pygame
-
+from settings import *
 pygame.init()
 fenetre = pygame.display.set_mode((800, 600))
 horloge = pygame.time.Clock()
 
 golem_rect = pygame.Rect(400, 300, 40, 40)
 sol_rect = pygame.Rect(0, 550, 800, 50) 
-vitesse = 5 
+
 
 running = True
 while running:
@@ -18,13 +18,13 @@ while running:
     ancienne_pos = golem_rect.copy()
 
     if touches[pygame.K_LEFT]:
-        golem_rect.x -= vitesse
+        golem_rect.x -= player_speed
     if touches[pygame.K_RIGHT]:
-        golem_rect.x += vitesse
+        golem_rect.x += player_speed
     if touches[pygame.K_UP]:
-        golem_rect.y -= vitesse
+        golem_rect.y -= player_speed
     if touches[pygame.K_DOWN]:
-        golem_rect.y += vitesse
+        golem_rect.y += player_speed
 
     if golem_rect.colliderect(sol_rect):
         golem_rect = ancienne_pos
