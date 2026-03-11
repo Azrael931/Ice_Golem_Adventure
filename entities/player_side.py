@@ -1,10 +1,10 @@
 import pygame
-from settings import *
+from constante import *
 pygame.init()
 fenetre = pygame.display.set_mode((800, 600))
 horloge = pygame.time.Clock()
 
-golem_rect = pygame.Rect(400, 300, 40, 40)
+golem_rect = pygame.Rect(400, 510, 40, 40)
 sol_rect = pygame.Rect(0, 550, 800, 50) 
 
 
