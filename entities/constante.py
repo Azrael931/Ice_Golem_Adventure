@@ -1,6 +1,6 @@
 
 #Constante de jeu
-Resolution = 1024, 768
+Resolution = 640, 640
 FPS = 60
 
 # Constante Physique
