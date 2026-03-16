@@ -4,11 +4,11 @@ Resolution = 1024, 768
 FPS = 60
 
 # Constante Physique
-gravite = 9.81
+gravite = 0.6
 
 #Constante du joueur
 player_speed = 10
-player_jump = 10
+player_jump = 7
 player_spawn = (100, 100)
 
 
