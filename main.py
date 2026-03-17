@@ -1,6 +1,7 @@
 import pygame
 import sys
-
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # Importation des constantes et des scènes
 from entities.constante import Resolution
 from scenes.cutscene import cinematique_logo
@@ -28,7 +29,7 @@ def executer_jeu():
     sys.exit()
 
 
-# Lancement du programme
 if __name__ == "__main__":
     executer_jeu()
+
 
