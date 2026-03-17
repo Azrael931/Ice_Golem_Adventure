@@ -5,7 +5,7 @@ import os
 # Ajouter le répertoire parent au chemin de recherche Python
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from entities.constante import Resolution, FPS, fond_menu, bouton_jouer, bouton_jouer_2
+from entities.constante import *
 from entities.player_side import lancer_jeu_side
 
 
@@ -22,13 +22,22 @@ def menu_principal(fenetre):
     fond_rect = fond.get_rect(center=(Resolution[0] // 2, Resolution[1] // 2))
     
     # Chargement et redimensionnement des boutons
-    bouton_normal = pygame.image.load(bouton_jouer).convert_alpha()
-    bouton_normal = pygame.transform.scale(bouton_normal, (149, 104))
-    bouton_hover = pygame.image.load(bouton_jouer_2).convert_alpha()
-    bouton_hover = pygame.transform.scale(bouton_hover, (149, 104))
+    bouton_normalpl = pygame.image.load(bouton_jouer).convert_alpha()
+    bouton_normalpl = pygame.transform.scale(bouton_normalpl, (149, 104))
+    bouton_hoverpl = pygame.image.load(bouton_jouer_2).convert_alpha()
+    bouton_hoverpl = pygame.transform.scale(bouton_hoverpl, (149, 104))
+
+    bouton_normalst = pygame.image.load(bouton_setting_2).convert_alpha()
+    bouton_normalst = pygame.transform.scale(bouton_normalst,(149,104))
+    bouton_hoverst = pygame.image.load(bouton_setting).convert_alpha()
+    bouton_hoverst = pygame.transform.scale(bouton_hoverst, (149,104))
     
-    bouton_rect = bouton_normal.get_rect(center=(512, 330))
-    bouton_actuel = bouton_normal
+    
+    bouton_rect = bouton_normalpl.get_rect(center=(512, 300))
+    bouton_actuel2 = bouton_normalpl
+
+    bouton_rect2 = bouton_normalst.get_rect(center=(512, 400))
+    bouton_actuel2 = bouton_normalst
 
     en_cours = True
     while en_cours:
@@ -50,14 +59,22 @@ def menu_principal(fenetre):
         # Vérifier si la souris est au-dessus du bouton
         souris_pos = pygame.mouse.get_pos()
         if bouton_rect.collidepoint(souris_pos):
-            bouton_actuel = bouton_hover
+            bouton_actuel = bouton_hoverpl
         else:
-            bouton_actuel = bouton_normal
+            bouton_actuel = bouton_normalpl
+        
+        if bouton_rect2.collidepoint(souris_pos):
+            bouton_actuel2 = bouton_hoverst
+        else :
+            bouton_actuel2 = bouton_normalst
+        
+        
 
         fenetre.blit(fond, fond_rect)
         
         # Afficher le bouton Jouer au centre
         fenetre.blit(bouton_actuel, bouton_rect)
+        fenetre.blit(bouton_actuel2, bouton_rect2)
 
         pygame.display.flip()
         horloge.tick(FPS)
