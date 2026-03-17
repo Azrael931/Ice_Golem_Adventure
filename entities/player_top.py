@@ -19,12 +19,12 @@ class Player(pygame.sprite.Sprite):
         self.attack = 10
         self.speed = 2
 
-        sheet = pygame.image.load('../assets/RagerIdle.png').convert_alpha()
+        sheet = pygame.image.load('../assets/ice_golem_v3_spritesheet.png').convert_alpha()
 
-        frame_width = 32
-        frame_height = 32
-        scale = 1.5
-        frame_count = sheet.get_width() // frame_width
+        frame_width = 80
+        frame_height = 80
+        scale = 0.75
+        frame_count = 5
 
         self.frames = []
         for i in range(frame_count):
@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 100
         self.rect.y = 100
 
-        self.animation_speed = 0.10
+        self.animation_speed = 0.14
         self.timer = 0
 
     def move(self):
