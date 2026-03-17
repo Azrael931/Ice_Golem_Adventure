@@ -8,7 +8,7 @@ gravite = 0.6
 
 #Constante du joueur
 player_speed = 10
-player_jump = 7
+player_jump = 13
 player_spawn = (100, 100)
 player_speed_top = 2
 
