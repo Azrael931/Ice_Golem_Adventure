@@ -1,8 +1,13 @@
 import pygame
 import sys
-# On importe les constantes en utilisant le chemin relatif ou absolu
-# Ici on suppose que le dossier parent est dans le path
-from entities.constante import Resolution, FPS, fond_menu
+import os
+
+# Ajouter le répertoire parent au chemin de recherche Python
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from entities.constante import *
+from entities.player_side import lancer_jeu_side
+
 
 
 def menu_principal(fenetre):
@@ -11,8 +16,28 @@ def menu_principal(fenetre):
     """
     horloge = pygame.time.Clock()
 
-    # Chargement du fond du menu
+    # Chargement et adaptation du fond du menu
     fond = pygame.image.load(fond_menu).convert()
+    fond = pygame.transform.scale(fond, Resolution)
+    fond_rect = fond.get_rect(center=(Resolution[0] // 2, Resolution[1] // 2))
+    
+    # Chargement et redimensionnement des boutons
+    bouton_normalpl = pygame.image.load(bouton_jouer).convert_alpha()
+    bouton_normalpl = pygame.transform.scale(bouton_normalpl, (149, 104))
+    bouton_hoverpl = pygame.image.load(bouton_jouer_2).convert_alpha()
+    bouton_hoverpl = pygame.transform.scale(bouton_hoverpl, (149, 104))
+
+    bouton_normalst = pygame.image.load(bouton_setting_2).convert_alpha()
+    bouton_normalst = pygame.transform.scale(bouton_normalst,(149,104))
+    bouton_hoverst = pygame.image.load(bouton_setting).convert_alpha()
+    bouton_hoverst = pygame.transform.scale(bouton_hoverst, (149,104))
+    
+    
+    bouton_rect = bouton_normalpl.get_rect(center=(512, 300))
+    bouton_actuel2 = bouton_normalpl
+
+    bouton_rect2 = bouton_normalst.get_rect(center=(512, 400))
+    bouton_actuel2 = bouton_normalst
 
     en_cours = True
     while en_cours:
@@ -20,25 +45,36 @@ def menu_principal(fenetre):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Vérifier si le clic est sur le bouton Jouer
+                if bouton_rect.collidepoint(event.pos):
+                    result = lancer_jeu_side(fenetre)
+                    if not result:  # Si le joueur a fermé la fenêtre
+                        pygame.quit()
+                        sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     en_cours = False
-                else:
-                    # Pour l'instant, n'importe quelle touche quitte le menu pour tester main.py
-                    en_cours = False
+        
+        # Vérifier si la souris est au-dessus du bouton
+        souris_pos = pygame.mouse.get_pos()
+        if bouton_rect.collidepoint(souris_pos):
+            bouton_actuel = bouton_hoverpl
+        else:
+            bouton_actuel = bouton_normalpl
+        
+        if bouton_rect2.collidepoint(souris_pos):
+            bouton_actuel2 = bouton_hoverst
+        else :
+            bouton_actuel2 = bouton_normalst
+        
+        
 
-        fenetre.blit(fond, (200, 50))
-
-        # Texte simple
-        font = pygame.font.SysFont('Arial', 48)
-        texte = font.render("Ice Golem Adventure", True, (255, 255, 255))
-        texte_rect = texte.get_rect(center=(Resolution[0] // 2, Resolution[1] // 4))
-        fenetre.blit(texte, texte_rect)
-
-        font_sm = pygame.font.SysFont('Arial', 24)
-        instructions = font_sm.render("Pressez une touche pour commencer", True, (200, 200, 200))
-        inst_rect = instructions.get_rect(center=(Resolution[0] // 2, Resolution[1] // 2))
-        fenetre.blit(instructions, inst_rect)
+        fenetre.blit(fond, fond_rect)
+        
+        # Afficher le bouton Jouer au centre
+        fenetre.blit(bouton_actuel, bouton_rect)
+        fenetre.blit(bouton_actuel2, bouton_rect2)
 
         pygame.display.flip()
         horloge.tick(FPS)

@@ -23,3 +23,9 @@ fond_n3 = 'assets/fond_n3.png'
 tir_speed = 20
 tir_damage = 10
 tir_cooldown = 50
+
+#Constante Menu
+bouton_jouer = 'assets/bouton_jouer_1.png'
+bouton_jouer_2 = 'assets/bouton_jouer_2.png'
+bouton_setting  = 'assets/bouton_parametre_1.png'
+bouton_setting_2 = 'assets/bouton_parametre_2.png'
