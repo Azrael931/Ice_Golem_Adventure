@@ -13,7 +13,7 @@ def lancer_jeu_side(fenetre):
     vitesse_x = 0 
     vitesse_y = 0 
     sol_rect = pygame.Rect(0, 550, Resolution[0], 20)
-    plateforme_rect = pygame.Rect(200, 350, 200, 40)
+    plateforme_rect = pygame.Rect(200, 350, 200, 20)
     
     nb_sauts = 0
     
@@ -64,12 +64,6 @@ def lancer_jeu_side(fenetre):
             golem_rect.top = 0
             vitesse_y = 1 #repart vers le bas immédiatement 
 
-        if golem_rect.top <= plateforme_rect.bottom and \
-        golem_rect.right >= plateforme_rect.left and \
-        golem_rect.left <= plateforme_rect.right and \
-        vitesse_y < 0 and golem_rect.top - vitesse_y >= plateforme_rect.bottom:
-            golem_rect.top = plateforme_rect.bottom
-            vitesse_y = 1
         
         
 
