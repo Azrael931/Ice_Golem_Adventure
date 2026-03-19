@@ -1,6 +1,10 @@
 import pygame
 import pytmx
 import pyscroll
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from entities.constante import Resolution
 
 # limite de l'ecran
