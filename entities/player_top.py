@@ -16,7 +16,7 @@ class Game:
         self.fenetre = pygame.display.set_mode(Resolution)
         pygame.display.set_caption("Niveau Player Top")
 
-        tmx_data = pytmx.util_pygame.load_pygame("../assets/mapdessus.tmx")
+        tmx_data = pytmx.util_pygame.load_pygame(os.path.join(os.path.dirname(__file__), "..", "assets", "mapdessus.tmx"))
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.fenetre.get_size())
 
