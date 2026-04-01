@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from entities.constante import *
 from entities.player_side import lancer_jeu_side
+from scenes.cutscene import cinematique_intro
 
 
 
@@ -48,10 +49,17 @@ def menu_principal(fenetre):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Vérifier si le clic est sur le bouton Jouer
                 if bouton_rect.collidepoint(event.pos):
+                    # Lancer la cinématique d'intro
+                    ok = cinematique_intro(fenetre)
+                    if not ok:
+                        pygame.quit()
+                        sys.exit()
+                    # Lancer directement le niveau 1 après la cinématique
                     result = lancer_jeu_side(fenetre)
                     if not result:  # Si le joueur a fermé la fenêtre
                         pygame.quit()
                         sys.exit()
+                    # Si result == True (ÉCHAP) → retour au menu naturellement
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     en_cours = False

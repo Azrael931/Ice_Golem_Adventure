@@ -16,9 +16,9 @@ def executer_jeu():
     fenetre = pygame.display.set_mode(Resolution)
     pygame.display.set_caption("Ice Golem Adventure")
 
-    # Lancement de la cinématique du logo
-    # La fonction retourne False si l'utilisateur quitte pendant la cinématique
+    # Cinématique 1 : Logo avec fondu
     termine_normalement = cinematique_logo(fenetre)
+
 
     if termine_normalement:
         # Lancement du menu principal
