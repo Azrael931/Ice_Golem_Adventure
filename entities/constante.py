@@ -10,7 +10,7 @@ gravite = 0.6
 player_speed = 10
 player_jump = 13
 player_spawn = (100, 100)
-player_speed_top = 2
+player_speed_top = 2.5
 
 
 #Constante map
