@@ -29,3 +29,11 @@ bouton_jouer = 'assets/bouton_jouer_1.png'
 bouton_jouer_2 = 'assets/bouton_jouer_2.png'
 bouton_setting  = 'assets/bouton_parametre_1.png'
 bouton_setting_2 = 'assets/bouton_parametre_2.png'
+
+#Constante Projectile
+projectile_vitesse   = 12
+projectile_gravite   = 0.35
+projectile_rayon     = 6
+projectile_couleur   = (140, 210, 255)
+projectile_contour   = (200, 240, 255)
+projectile_duree_vie = 180
