@@ -17,6 +17,11 @@ def menu_principal(fenetre):
     """
     horloge = pygame.time.Clock()
 
+    # Musique de fond du menu
+    pygame.mixer.music.load(musique_menu)
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play(-1)  # -1 = boucle infinie
+
     # Chargement et adaptation du fond du menu
     fond = pygame.image.load(fond_menu).convert()
     fond = pygame.transform.scale(fond, Resolution)
@@ -49,6 +54,8 @@ def menu_principal(fenetre):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Vérifier si le clic est sur le bouton Jouer
                 if bouton_rect.collidepoint(event.pos):
+                    # Arrêter la musique du menu avant la cinématique
+                    pygame.mixer.music.stop()
                     # Lancer la cinématique d'intro
                     ok = cinematique_intro(fenetre)
                     if not ok:
@@ -59,7 +66,10 @@ def menu_principal(fenetre):
                     if not result:  # Si le joueur a fermé la fenêtre
                         pygame.quit()
                         sys.exit()
-                    # Si result == True (ÉCHAP) → retour au menu naturellement
+                    # Retour au menu : relancer la musique
+                    pygame.mixer.music.load(musique_menu)
+                    pygame.mixer.music.set_volume(0.5)
+                    pygame.mixer.music.play(-1)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     en_cours = False

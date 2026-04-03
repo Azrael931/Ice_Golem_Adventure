@@ -1,4 +1,3 @@
-
 #Constante de jeu
 Resolution = 1024, 768
 FPS = 60
@@ -29,6 +28,7 @@ bouton_jouer = 'assets/bouton_jouer_1.png'
 bouton_jouer_2 = 'assets/bouton_jouer_2.png'
 bouton_setting  = 'assets/bouton_parametre_1.png'
 bouton_setting_2 = 'assets/bouton_parametre_2.png'
+musique_menu = 'assets/musique-menu.mp3'
 
 #Constante Projectile
 projectile_vitesse   = 12
