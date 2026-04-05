@@ -94,6 +94,13 @@ def lancer_jeu_side(fenetre):
 
     nb_sauts = 0
 
+    sprite_sheet = pygame.image.load("assets/golem4.png").convert_alpha()
+    frame_actuelle = 0
+    compteur = 0
+
+    etat_du_golem = "idle"
+
+
     running = True
     while running:
         for event in pygame.event.get():
@@ -113,10 +120,14 @@ def lancer_jeu_side(fenetre):
         # --- LOGIQUE ---
         touches = pygame.key.get_pressed()
         vitesse_x = 0
+        etat_du_golem = "idle" 
+
         if touches[pygame.K_LEFT]:
             vitesse_x = -player_speed
+            etat_du_golem = "marche"
         if touches[pygame.K_RIGHT]:
             vitesse_x = player_speed
+            etat_du_golem = "marche"
 
         golem_rect.x += vitesse_x
 
@@ -128,6 +139,29 @@ def lancer_jeu_side(fenetre):
         # GRAVITE
         vitesse_y += gravite
         golem_rect.y += vitesse_y
+        if vitesse_y < 0:
+            etat_du_golem = "saut"
+        
+        compteur += 1
+        if compteur >= 10:
+            compteur = 0
+            frame_actuelle += 1
+        if frame_actuelle >= 6:
+            frame_actuelle = 0
+
+
+        if etat_du_golem == "idle":
+            ligne_y = 0
+        if etat_du_golem == "marche":
+            ligne_y = 256
+        if etat_du_golem == "saut":
+            ligne_y = 512
+        if etat_du_golem == "attaque":
+            ligne_y = 768
+
+        
+        frame = sprite_sheet.subsurface(pygame.Rect(frame_actuelle * 256, ligne_y, 256, 256))
+        frame = pygame.transform.scale(frame, (40, 64))
 
         # Collision sol
         if golem_rect.bottom >= sol_rect.top:
@@ -162,7 +196,7 @@ def lancer_jeu_side(fenetre):
 
         # --- DESSIN ---
         fenetre.fill((30, 30, 40))
-        pygame.draw.rect(fenetre, (120, 180, 100), golem_rect)
+        fenetre.blit(frame, (golem_rect.x, golem_rect.y + 10), special_flags=0)
         pygame.draw.rect(fenetre, (80, 60, 40), sol_rect)
         pygame.draw.rect(fenetre, (80, 60, 40), plateforme_rect)
 

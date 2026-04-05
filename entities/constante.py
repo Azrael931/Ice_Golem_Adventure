@@ -6,8 +6,8 @@ FPS = 60
 gravite = 0.6
 
 #Constante du joueur
-player_speed = 10
-player_jump = 13
+player_speed = 3.5
+player_jump = 12
 player_spawn = (100, 100)
 player_speed_top = 2.5
 player_hp_max = 100
