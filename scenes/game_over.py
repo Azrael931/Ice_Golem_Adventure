@@ -12,19 +12,11 @@ from entities.constante import Resolution, FPS
 # Retourne "menu" pour retourner au menu principal.
 # -------------------------------------------------------
 
-TEXTE_MORT = [
-    "Imir est tombé...",
-    "",
-    "Le froid l'a englouti.",
-    "Smog règne encore sur le monde.",
-]
-
-
 def cinematique_mort(fenetre):
     """
     Lance la cinématique de mort du joueur.
     Affiche l'image gameover.png avec un fondu rouge dramatique,
-    du texte narratif, puis attend que le joueur appuie sur une touche.
+    puis attend que le joueur appuie sur une touche.
     Retourne "menu" pour signaler le retour au menu.
     """
     screen_w, screen_h = fenetre.get_size()
@@ -46,10 +38,9 @@ def cinematique_mort(fenetre):
     voile_rouge = pygame.Surface((screen_w, screen_h))
     voile_rouge.fill((120, 0, 0))
 
-    # Police
+    # Police pour l'indication de retour
     pygame.font.init()
-    police_texte = pygame.font.SysFont("Consolas", 22)
-    police_hint  = pygame.font.SysFont("Consolas", 16)
+    police_hint = pygame.font.SysFont("Consolas", 16)
 
     # -------------------------------------------------------
     # PHASE 1 : Eclair rouge (flash court)
@@ -65,7 +56,6 @@ def cinematique_mort(fenetre):
             if event.type == pygame.QUIT:
                 return "menu"
         voile_rouge.set_alpha(alpha_flash)
-        fond_noir.set_alpha(255)
         fenetre.fill((0, 0, 0))
         fenetre.blit(voile_rouge, (0, 0))
         pygame.display.flip()
@@ -88,46 +78,8 @@ def cinematique_mort(fenetre):
         pygame.display.flip()
         horloge.tick(FPS)
 
-    # PHASE 3 : (titre supprimé - déjà présent sur l'image de fond)
-
     # -------------------------------------------------------
-    # PHASE 4 : Texte narratif, ligne par ligne
-    # -------------------------------------------------------
-    surf_textes = []
-    for ligne in TEXTE_MORT:
-        if ligne == "":
-            surf_textes.append(None)
-        else:
-            s = police_texte.render(ligne, True, (200, 160, 160))
-            surf_textes.append(s)
-
-    y_debut = screen_h // 2 - 20
-    espacement = 30
-
-    for i in range(len(surf_textes)):
-        # Afficher chaque ligne avec un délai
-        temps = pygame.time.get_ticks()
-        while pygame.time.get_ticks() - temps < 700:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return "menu"
-                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                    # Passer les lignes restantes
-                    temps = 0
-                    break
-
-        fenetre.blit(image_go, (0, 0))
-        y = y_debut
-        for j in range(i + 1):
-            if surf_textes[j] is not None:
-                rect_t = surf_textes[j].get_rect(center=(screen_w // 2, y))
-                fenetre.blit(surf_textes[j], rect_t)
-            y += espacement
-        pygame.display.flip()
-        horloge.tick(FPS)
-
-    # -------------------------------------------------------
-    # PHASE 5 : Attente et indication de retour au menu
+    # PHASE 3 : Attente et indication de retour au menu
     # -------------------------------------------------------
     en_attente = True
     while en_attente:
@@ -137,16 +89,8 @@ def cinematique_mort(fenetre):
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 en_attente = False
 
-        # Clignotement du hint
         ticks = pygame.time.get_ticks()
         fenetre.blit(image_go, (0, 0))
-
-        y = y_debut
-        for s in surf_textes:
-            if s is not None:
-                rect_t = s.get_rect(center=(screen_w // 2, y))
-                fenetre.blit(s, rect_t)
-            y += espacement
 
         if (ticks // 600) % 2 == 0:
             hint = police_hint.render("[ ESPACE / CLIC ] Retour au menu", True, (150, 100, 100))
@@ -157,7 +101,7 @@ def cinematique_mort(fenetre):
         horloge.tick(FPS)
 
     # -------------------------------------------------------
-    # PHASE 6 : Fade Out vers le noir
+    # PHASE 4 : Fade Out vers le noir
     # -------------------------------------------------------
     alpha = 0
     while alpha < 255:
