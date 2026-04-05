@@ -10,6 +10,7 @@ player_speed = 10
 player_jump = 13
 player_spawn = (100, 100)
 player_speed_top = 2.5
+player_hp_max = 100
 
 
 #Constante map

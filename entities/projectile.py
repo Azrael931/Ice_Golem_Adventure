@@ -112,6 +112,7 @@ def projectile_touche_rect(p, rect):
     Retourne True si le projectile p est en collision avec quelque chose.
     """
 
+        #à méditer
 
 
     return 
