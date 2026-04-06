@@ -331,3 +331,4 @@ def cinematique_intro(fenetre):
         horloge.tick(60)
 
     return True
+
