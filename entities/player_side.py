@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from entities.constante import *
 from scenes.game_over import cinematique_mort
-
+#test
 
 # -------------------------------------------------------
 # CREATION DE L'ETAT DU JOUEUR (DICTIONNAIRE)
@@ -94,11 +94,13 @@ def lancer_jeu_side(fenetre):
 
     nb_sauts = 0
 
-    sprite_sheet = pygame.image.load("assets/golem4.png").convert_alpha()
+    sprite_sheet_droite = pygame.image.load("assets/golem4.png").convert_alpha()
+    sprite_sheet_gauche = pygame.image.load("assets/golem6.png").convert_alpha()
     frame_actuelle = 0
     compteur = 0
 
     etat_du_golem = "idle"
+    orientation_golem = "droite"
 
 
     running = True
@@ -125,9 +127,12 @@ def lancer_jeu_side(fenetre):
         if touches[pygame.K_LEFT]:
             vitesse_x = -player_speed
             etat_du_golem = "marche"
+            orientation_golem = "gauche"
         if touches[pygame.K_RIGHT]:
             vitesse_x = player_speed
             etat_du_golem = "marche"
+            orientation_golem = "droite"
+
 
         golem_rect.x += vitesse_x
 
@@ -159,8 +164,11 @@ def lancer_jeu_side(fenetre):
         if etat_du_golem == "attaque":
             ligne_y = 768
 
-        
-        frame = sprite_sheet.subsurface(pygame.Rect(frame_actuelle * 256, ligne_y, 256, 256))
+        if orientation_golem == "gauche":
+            frame = sprite_sheet_gauche.subsurface(pygame.Rect(frame_actuelle * 256, ligne_y, 256, 256))
+        else:
+            frame = sprite_sheet_droite.subsurface(pygame.Rect(frame_actuelle * 256, ligne_y, 256, 256))
+            
         frame = pygame.transform.scale(frame, (40, 64))
 
         # Collision sol
