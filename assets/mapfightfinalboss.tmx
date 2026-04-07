@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="66">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="80">
  <tileset firstgid="1" source="../../../tout.tsx"/>
  <tileset firstgid="2965" source="../../../arbrevikings.tsx"/>
  <tileset firstgid="5165" source="../../../AppData/Local/Temp/37bf6215-6be2-4a3b-bc2b-ad0f61b4ea56_Epic RPG World - Highlands V1.4.1.zip.a56/Epic RPG World - Highlands V1.4.1/TiledMap Editor/arenefinal.tsx"/>
@@ -802,5 +802,19 @@
   <object id="59" x="384" y="-20" width="1544" height="206"/>
   <object id="60" x="236" y="34" width="186" height="150"/>
   <object id="61" x="2304" y="2784" width="32"/>
+  <object id="66" x="9.44859" y="4.72429" width="373.219" height="2244.04"/>
+  <object id="67" x="184.247" y="1525.95" width="1880.27" height="529.121"/>
+  <object id="68" x="1903.89" y="-14.1729" width="444.084" height="2418.84"/>
+  <object id="69" x="278.733" y="28.3458" width="1785.78" height="132.28"/>
+  <object id="70" x="2291.28" y="9.44859" width="803.13" height="151.177"/>
+  <object id="71" x="3014.1" y="-4.72429" width="179.523" height="3165.28"/>
+  <object id="72" x="2177.9" y="2905.44" width="1034.62" height="302.355"/>
+  <object id="73" x="1913.34" y="2570.02" width="392.116" height="618.882"/>
+  <object id="74" x="1067.69" y="3009.37" width="883.443" height="198.42"/>
+  <object id="75" x="429.911" y="2007.82" width="675.574" height="420.462"/>
+  <object id="76" x="755.887" y="2555.84" width="344.873" height="637.78"/>
+  <object id="77" x="576.364" y="2820.4" width="396.841" height="368.495"/>
+  <object id="78" x="14.1729" y="2834.58" width="373.219" height="363.771"/>
+  <object id="79" x="9.44859" y="2220.42" width="236.215" height="680.298"/>
  </objectgroup>
 </map>
