@@ -38,3 +38,8 @@ projectile_rayon     = 6
 projectile_couleur   = (140, 210, 255)
 projectile_contour   = (200, 240, 255)
 projectile_duree_vie = 180
+
+# Constantes Attaques (top view)
+attack1_damage = 8
+attack2_damage = 14
+attack_range = 90

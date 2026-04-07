@@ -15,7 +15,7 @@ class Game:
         self.fenetre = pygame.display.set_mode(Resolution)
         pygame.display.set_caption("Niveau Player Top")
 
-        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "mapchateau.tmx")
+        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "bossfinalmap.tmx")
         tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
         
         self.map_width = tmx_data.width * tmx_data.tilewidth
@@ -63,16 +63,24 @@ class Game:
             # --- INTERFACE ET DÉGÂTS ---
             # Barre de vie du Joueur (Fixe)
             self.draw_health_bar(self.fenetre, 20, 20, self.player.health, self.player.max_health, (200, 20, 20))
-            
-            # Barre de vie du Monstre (Flottante)
-            camera_offset = self.map_layer.view_rect
-            m_pos = (self.monster.rect.x - camera_offset.x, self.monster.rect.y - camera_offset.y)
-            self.draw_health_bar(self.fenetre, m_pos[0], m_pos[1] - 20, self.monster.health, self.monster.max_health, (255, 140, 0), width=64)
 
-            # Logique de collision : Si attaque clic droit touche le monstre
-            if self.player.is_attacking and self.player.current_attack_type == 2:
-                if self.player.rect.colliderect(self.monster.rect):
-                    self.monster.take_damage(0.5) # Dégâts continus pendant l'animation
+            # Gestion du Monstre (Barre de vie et Dégâts) si il est vivant
+            if self.monster.alive():
+                # Barre de vie du Monstre (Flottante)
+                camera_offset = self.map_layer.view_rect
+                m_pos = (self.monster.rect.x - camera_offset.x, self.monster.rect.y - camera_offset.y)
+                self.draw_health_bar(self.fenetre, m_pos[0], m_pos[1] - 20, self.monster.health, self.monster.max_health, (255, 140, 0), width=64)
+
+                # Logique de combat : Si le joueur attaque
+                if self.player.is_attacking:
+                    # On crée une zone d'attaque (hitbox) plus large pour simuler l'allonge du Golem
+                    # On l'agrandit de 100 pixels pour que l'attaque touche à "bonne distance"
+                    hitbox_attaque = self.player.rect.inflate(100, 100)
+                    
+                    if hitbox_attaque.colliderect(self.monster.rect):
+                        # Dégâts selon le type d'attaque
+                        degats = 0.3 if self.player.current_attack_type == 1 else 0.8
+                        self.monster.take_damage(degats)
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -86,17 +94,17 @@ class Monster(pygame.sprite.Sprite):
         self.target_h = 128
         self.max_health = 100
         self.health = 100
-        
+
         assets_dir = os.path.join(os.path.dirname(__file__), "..", "assets")
         path_troll = os.path.join(assets_dir, "troll_idle.png")
-        
+
         # Le troll_idle est en 3x3 (9 frames)
         self.idle_frames = self.load_animation(path_troll, cols=3, rows=3, count=9)
-        
+
         self.current_frame = 0
         self.image = self.idle_frames[0]
         self.rect = pygame.Rect(x, y, 64, 64)
-        
+
         self.animation_speed = 0.1
         self.timer = 0
 
@@ -105,11 +113,11 @@ class Monster(pygame.sprite.Sprite):
             surf = pygame.Surface((self.target_w, self.target_h))
             surf.fill((0, 0, 255))
             return [surf]
-            
+
         sheet = pygame.image.load(path).convert_alpha()
         sheet_w, sheet_h = sheet.get_size()
         cell_w, cell_h = sheet_w // cols, sheet_h // rows
-        
+
         frames = []
         for i in range(count):
             col, row = i % cols, i // cols
@@ -264,7 +272,7 @@ class Player(pygame.sprite.Sprite):
                     self.is_attacking = False
                     self.current_frame = 0
                     self.current_animation = self.idle_frames if not self.is_moving else self.move_frames
-            
+
             self.current_frame %= len(self.current_animation)
 
         image_to_display = self.current_animation[min(self.current_frame, len(self.current_animation)-1)]
