@@ -29,6 +29,8 @@ bouton_jouer = 'assets/bouton_jouer_1.png'
 bouton_jouer_2 = 'assets/bouton_jouer_2.png'
 bouton_setting  = 'assets/bouton_parametre_1.png'
 bouton_setting_2 = 'assets/bouton_parametre_2.png'
+bouton_retour = 'assets/bouton_retour_1.png'
+bouton_retour_2 = 'assets/bouton_retour_2.png'
 musique_menu = 'assets/musique-menu.mp3'
 
 #Constante Projectile
