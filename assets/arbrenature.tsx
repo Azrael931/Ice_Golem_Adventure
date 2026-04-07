@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.0" name="arbrenature" tilewidth="32" tileheight="32" tilecount="432" columns="16">
- <image source="deconature.png" width="512" height="864"/>
+<tileset version="1.10" tiledversion="1.12.0" name="arbrenature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
+ <image source="IceTileset.png" width="640" height="288"/>
 </tileset>
