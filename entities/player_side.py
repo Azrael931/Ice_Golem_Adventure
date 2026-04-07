@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from entities.constante import *
 from scenes.game_over import cinematique_mort
-
+#test
 
 # -------------------------------------------------------
 # CREATION DE L'ETAT DU JOUEUR (DICTIONNAIRE)
