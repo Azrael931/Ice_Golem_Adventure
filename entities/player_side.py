@@ -95,7 +95,7 @@ def lancer_jeu_side(fenetre):
     nb_sauts = 0
 
     sprite_sheet_droite = pygame.image.load("assets/golem4.png").convert_alpha()
-    sprite_sheet_gauche = pygame.image.load("assets/golem5.png").convert_alpha()
+    sprite_sheet_gauche = pygame.image.load("assets/golem6.png").convert_alpha()
     frame_actuelle = 0
     compteur = 0
 
