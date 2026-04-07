@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 
 # -------------------------------------------------------
 # CINEMATIQUE 1 : Logo avec fondu
@@ -152,6 +153,29 @@ def _dessiner_boite_texte(fenetre, police, lignes_affichees, alpha_boite):
         fenetre.blit(hint_surf, (boite_rect.x + 15, boite_rect.bottom - 28))
 
 
+def _creer_son_frappe():
+    """
+    Genere un son de frappe machine a ecrire synthetique court (bruit blanc ~30ms).
+    Retourne un objet pygame.mixer.Sound ou None si le mixer n'est pas disponible.
+    """
+    freq = 44100
+    duree_ms = 30
+    nb_echantillons = freq * duree_ms // 1000  # ~1323 echantillons
+    buf = bytearray(nb_echantillons * 2)  # 16 bits = 2 octets par echantillon
+    i = 0
+    while i < nb_echantillons:
+        # Bruit blanc court avec enveloppe decroissante (plus fort au debut)
+        facteur = 1.0 - (i / nb_echantillons)
+        valeur = int(random.randint(-3000, 3000) * facteur)
+        # Ecrire 16 bits little-endian
+        buf[i * 2] = valeur & 0xFF
+        buf[i * 2 + 1] = (valeur >> 8) & 0xFF
+        i += 1
+    son = pygame.mixer.Sound(buffer=bytes(buf))
+    son.set_volume(0.15)
+    return son
+
+
 def cinematique_intro(fenetre):
     """
     Affiche la cinematique d'intro avec l'image du scientifique holographique
@@ -159,6 +183,9 @@ def cinematique_intro(fenetre):
     Retourne True si terminé normalement, False si l'utilisateur quitte.
     """
     screen_w, screen_h = fenetre.get_size()
+
+    # Son de frappe machine a ecrire (genere synthetiquement)
+    son_frappe = _creer_son_frappe()
 
     # Chargement de l'image de fond (avec fallback si l'image n'existe pas)
     if os.path.exists('assets/holo-cine-labo.png'):
@@ -246,6 +273,11 @@ def cinematique_intro(fenetre):
             compteur_frames += 1
             if compteur_frames >= FRAMES_PAR_CHAR:
                 compteur_frames = 0
+                if char_affiche < len(ligne_courante):
+                    # Jouer le son uniquement sur les caracteres visibles (pas les espaces)
+                    c = ligne_courante[char_affiche]
+                    if c != " " and son_frappe is not None:
+                        son_frappe.play()
                 char_affiche += 1
             if char_affiche >= len(ligne_courante):
                 char_affiche = len(ligne_courante)
