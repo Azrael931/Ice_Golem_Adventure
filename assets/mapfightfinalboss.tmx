@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="66">
- <tileset firstgid="1" source="../../../tout.tsx"/>
- <tileset firstgid="2965" source="../../../arbrevikings.tsx"/>
- <tileset firstgid="5165" source="../../../AppData/Local/Temp/37bf6215-6be2-4a3b-bc2b-ad0f61b4ea56_Epic RPG World - Highlands V1.4.1.zip.a56/Epic RPG World - Highlands V1.4.1/TiledMap Editor/arenefinal.tsx"/>
- <tileset firstgid="5469" source="../../../arbreneige.tsx"/>
- <tileset firstgid="5649" source="../../../AppData/Local/Temp/37bf6215-6be2-4a3b-bc2b-ad0f61b4ea56_Epic RPG World - Highlands V1.4.1.zip.a56/Epic RPG World - Highlands V1.4.1/TiledMap Editor/tombe.tsx"/>
- <tileset firstgid="6177" source="../../../AppData/Local/Temp/37bf6215-6be2-4a3b-bc2b-ad0f61b4ea56_Epic RPG World - Highlands V1.4.1.zip.a56/Epic RPG World - Highlands V1.4.1/TiledMap Editor/tombesssssss.tsx"/>
+ <tileset firstgid="1" source="tout.tsx"/>
+ <tileset firstgid="2965" source="arbrevikings.tsx"/>
+ <tileset firstgid="5165" source="arenefinal.tsx"/>
+ <tileset firstgid="5469" source="arbreneige.tsx"/>
+ <tileset firstgid="5649" source="tombe.tsx"/>
+ <tileset firstgid="6177" source="tombesssssss.tsx"/>
  <layer id="7" name="solsol" width="100" height="100">
   <data encoding="csv">
 1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,1604,
