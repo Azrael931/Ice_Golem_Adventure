@@ -1,0 +1,10 @@
+/.vscode/settings.json
+/.idea
+/.idea/.gitignore
+/.venv
+**/__pycache__/
+/entities/__pycache__/
+**/*.pyc
+**/*.pyo
+entities\__pycache__\constante.cpython-313.pyc
+entities\__pycache__
