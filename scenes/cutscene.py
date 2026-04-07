@@ -10,7 +10,7 @@ def cinematique_logo(fenetre):
     Affiche le logo avec un effet de fondu.
     Retourne True si terminé normalement, False si l'utilisateur quitte.
     """
-    logo = pygame.image.load('assets/ice_logo.png').convert_alpha()
+    logo = pygame.image.load('assets/ui/ice_logo.png').convert_alpha()
 
     screen_w, screen_h = fenetre.get_size()
     logo_w, logo_h = logo.get_size()
@@ -188,10 +188,10 @@ def cinematique_intro(fenetre):
     son_frappe = _creer_son_frappe()
 
     # Chargement de l'image de fond (avec fallback si l'image n'existe pas)
-    if os.path.exists('assets/holo-cine-labo.png'):
-        fond = pygame.image.load('assets/holo-cine-labo.png').convert()
+    if os.path.exists('assets/backgrounds/holo-cine-labo.png'):
+        fond = pygame.image.load('assets/backgrounds/holo-cine-labo.png').convert()
     else:
-        fond = pygame.image.load('assets/fond_menu.png').convert()
+        fond = pygame.image.load('assets/ui/fond_menu.png').convert()
     fond = pygame.transform.scale(fond, (screen_w, screen_h))
 
     # Overlay sombre pour améliorer la lisibilité du texte

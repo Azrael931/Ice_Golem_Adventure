@@ -23,7 +23,7 @@ def cinematique_mort(fenetre):
     horloge = pygame.time.Clock()
 
     # --- Chargement de l'image de game over ---
-    chemin_go = os.path.join(os.path.dirname(__file__), '..', 'assets', 'gameover.png')
+    chemin_go = os.path.join(os.path.dirname(__file__), '..', 'assets', 'ui', 'gameover.png')
     if os.path.exists(chemin_go):
         image_go = pygame.image.load(chemin_go).convert()
         image_go = pygame.transform.scale(image_go, (screen_w, screen_h))

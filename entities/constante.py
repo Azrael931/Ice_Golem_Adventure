@@ -34,10 +34,10 @@ monster_anim_speed = 0.1
 monster_spawn      = (400, 400)
 
 # ── Map ──────────────────────────────────────────────────
-fond_menu = 'assets/fond_menu.png'
-fond_n1   = 'assets/fond_n1.png'
-fond_n2   = 'assets/fond_n2.png'
-fond_n3   = 'assets/fond_n3.png'
+fond_menu = 'assets/ui/fond_menu.png'
+fond_n1   = 'assets/ui/fond_n1.png'
+fond_n2   = 'assets/ui/fond_n2.png'
+fond_n3   = 'assets/ui/fond_n3.png'
 
 # ── Tir ──────────────────────────────────────────────────
 tir_speed    = 20
@@ -45,13 +45,13 @@ tir_damage   = 10
 tir_cooldown = 50
 
 # ── Menu ─────────────────────────────────────────────────
-bouton_jouer     = 'assets/bouton_jouer_1.png'
-bouton_jouer_2   = 'assets/bouton_jouer_2.png'
-bouton_setting   = 'assets/bouton_parametre_1.png'
-bouton_setting_2 = 'assets/bouton_parametre_2.png'
-bouton_retour    = 'assets/bouton_retour_1.png'
-bouton_retour_2  = 'assets/bouton_retour_2.png'
-musique_menu     = 'assets/musique-menu.mp3'
+bouton_jouer     = 'assets/ui/bouton_jouer_1.png'
+bouton_jouer_2   = 'assets/ui/bouton_jouer_2.png'
+bouton_setting   = 'assets/ui/bouton_parametre_1.png'
+bouton_setting_2 = 'assets/ui/bouton_parametre_2.png'
+bouton_retour    = 'assets/ui/bouton_retour_1.png'
+bouton_retour_2  = 'assets/ui/bouton_retour_2.png'
+musique_menu     = 'assets/audio/musique-menu.mp3'
 
 # ── Projectile ───────────────────────────────────────────
 projectile_vitesse   = 12

@@ -36,13 +36,13 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.speed = 5
-        assets_dir = os.path.join(os.path.dirname(__file__), "..", "assets")
+        sprites_dir = os.path.join(os.path.dirname(__file__), "..", "assets", "sprites")
         
         target = (400, 250)
-        self.idle_frames = load_animation(os.path.join(assets_dir, "golem_idle.png"), 4, 4, target_size=target)
-        self.move_frames = load_animation(os.path.join(assets_dir, "golem_move.png"), 4, 4, target_size=target)
-        self.at1_frames  = load_animation(os.path.join(assets_dir, "golem_attack1.png"), 5, 4, target_size=target)
-        self.at2_frames  = load_animation(os.path.join(assets_dir, "golem_attack2.png"), 6, 6, target_size=target)
+        self.idle_frames = load_animation(os.path.join(sprites_dir, "golem_idle.png"), 4, 4, target_size=target)
+        self.move_frames = load_animation(os.path.join(sprites_dir, "golem_move.png"), 4, 4, target_size=target)
+        self.at1_frames  = load_animation(os.path.join(sprites_dir, "golem_attack1.png"), 5, 4, target_size=target)
+        self.at2_frames  = load_animation(os.path.join(sprites_dir, "golem_attack2.png"), 6, 6, target_size=target)
 
         self.current_animation = self.idle_frames
         self.is_moving = False
@@ -165,7 +165,7 @@ class Game:
         self.fenetre = pygame.display.set_mode(Resolution)
         pygame.display.set_caption("Niveau Player Top")
 
-        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "mapfightfinalboss.tmx")
+        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "niveau3", "mapfightfinalboss.tmx")
         self.tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
         
         map_data  = pyscroll.data.TiledMapData(self.tmx_data)
