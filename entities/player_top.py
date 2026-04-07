@@ -4,279 +4,213 @@ import pyscroll
 import sys
 import os
 
+# Configuration du chemin pour l'import des constantes
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from entities.constante import Resolution
 
 # Initialisation de Pygame
 pygame.init()
 
-class Game:
-    def __init__(self):
-        self.fenetre = pygame.display.set_mode(Resolution)
-        pygame.display.set_caption("Niveau Player Top")
-
-        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "bossfinalmap.tmx")
-        tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
-        
-        self.map_width = tmx_data.width * tmx_data.tilewidth
-        self.map_height = tmx_data.height * tmx_data.tileheight
-
-        map_data = pyscroll.data.TiledMapData(tmx_data)
-        self.map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.fenetre.get_size())
-
-        self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer, default_layer=2)
-        self.player = Player()
-        self.group.add(self.player)
-
-        # Ajouter le monstre Troll (position 400, 400)
-        self.monster = Monster(400, 400)
-        self.group.add(self.monster)
-
-        self.clock = pygame.time.Clock()
-
-    def draw_health_bar(self, surface, x, y, hp, max_hp, color, width=200, height=15):
-        ratio = max(0, hp / max_hp)
-        pygame.draw.rect(surface, (50, 50, 50), (x, y, width, height))
-        if hp > 0:
-            pygame.draw.rect(surface, color, (x, y, width * ratio, height))
-        pygame.draw.rect(surface, (255, 255, 255), (x, y, width, height), 1)
-
-    def run(self):
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    running = False
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1: # Clic Gauche
-                        self.player.attack(attack_type=1)
-                    elif event.button == 3: # Clic Droit
-                        self.player.attack(attack_type=2)
-
-            self.group.update(self.map_width, self.map_height)
-            self.group.center(self.player.rect.center)
-            self.group.draw(self.fenetre)
-
-            # --- INTERFACE ET DÉGÂTS ---
-            # Barre de vie du Joueur (Fixe)
-            self.draw_health_bar(self.fenetre, 20, 20, self.player.health, self.player.max_health, (200, 20, 20))
-
-            # Gestion du Monstre (Barre de vie et Dégâts) si il est vivant
-            if self.monster.alive():
-                # Barre de vie du Monstre (Flottante)
-                camera_offset = self.map_layer.view_rect
-                m_pos = (self.monster.rect.x - camera_offset.x, self.monster.rect.y - camera_offset.y)
-                self.draw_health_bar(self.fenetre, m_pos[0], m_pos[1] - 20, self.monster.health, self.monster.max_health, (255, 140, 0), width=64)
-
-                # Logique de combat : Si le joueur attaque
-                if self.player.is_attacking:
-                    # On crée une zone d'attaque (hitbox) plus large pour simuler l'allonge du Golem
-                    # On l'agrandit de 100 pixels pour que l'attaque touche à "bonne distance"
-                    hitbox_attaque = self.player.rect.inflate(100, 100)
-                    
-                    if hitbox_attaque.colliderect(self.monster.rect):
-                        # Dégâts selon le type d'attaque
-                        degats = 0.3 if self.player.current_attack_type == 1 else 0.8
-                        self.monster.take_damage(degats)
-
-            pygame.display.flip()
-            self.clock.tick(60)
-        pygame.quit()
-
-class Monster(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        super().__init__()
-        self._layer = 2
-        self.target_w = 128
-        self.target_h = 128
-        self.max_health = 100
-        self.health = 100
-
-        assets_dir = os.path.join(os.path.dirname(__file__), "..", "assets")
-        path_troll = os.path.join(assets_dir, "troll_idle.png")
-
-        # Le troll_idle est en 3x3 (9 frames)
-        self.idle_frames = self.load_animation(path_troll, cols=3, rows=3, count=9)
-
-        self.current_frame = 0
-        self.image = self.idle_frames[0]
-        self.rect = pygame.Rect(x, y, 64, 64)
-
-        self.animation_speed = 0.1
-        self.timer = 0
-
-    def load_animation(self, path, cols, rows, count):
-        if not os.path.exists(path):
-            surf = pygame.Surface((self.target_w, self.target_h))
-            surf.fill((0, 0, 255))
-            return [surf]
-
-        sheet = pygame.image.load(path).convert_alpha()
-        sheet_w, sheet_h = sheet.get_size()
-        cell_w, cell_h = sheet_w // cols, sheet_h // rows
-
-        frames = []
-        for i in range(count):
-            col, row = i % cols, i // cols
-            frame = sheet.subsurface((col * cell_w, row * cell_h, cell_w, cell_h))
-            frame = pygame.transform.scale(frame, (self.target_w, self.target_h))
+def load_animation(path, cols, rows, scale=1.0, target_size=None):
+    """Fonction universelle pour charger et découper une sprite sheet"""
+    if not os.path.exists(path):
+        return [pygame.Surface((32, 32), pygame.SRCALPHA)]
+    
+    sheet = pygame.image.load(path).convert_alpha()
+    frame_w, frame_h = sheet.get_width() // cols, sheet.get_height() // rows
+    frames = []
+    for row in range(rows):
+        for col in range(cols):
+            frame = sheet.subsurface((col * frame_w, row * frame_h, frame_w, frame_h))
+            if target_size:
+                frame = pygame.transform.scale(frame, target_size)
+            elif scale != 1.0:
+                frame = pygame.transform.scale(frame, (int(frame_w * scale), int(frame_h * scale)))
             frames.append(frame)
-        return frames
+    return frames
 
-    def take_damage(self, amount):
-        self.health = max(0, self.health - amount)
-
-    def update(self, map_w, map_h):
-        if self.health <= 0:
-            self.kill() # Supprime le monstre s'il est mort
-            return
-
-        self.timer += self.animation_speed
-        if self.timer >= 1:
-            self.timer = 0
-            self.current_frame = (self.current_frame + 1) % len(self.idle_frames)
-            self.image = self.idle_frames[self.current_frame]
-
+# ==========================================
+# CLASSE JOUEUR (Golem)
+# ==========================================
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.speed = 3
-        self._layer = 2  # Correction : Pyscroll utilise _layer avec un underscore
-        self.max_health = 100
-        self.health = 100
-
-        # --- CONFIGURATION DES ANIMATIONS ---
-        # Taille finale souhaitée pour le personnage en jeu
-        self.target_w = 320  # Change this value to make sprite bigger (e.g., 192, 256, 320)
-        self.target_h = 320  # Change this value to make sprite bigger
-
+        self.speed = 5
         assets_dir = os.path.join(os.path.dirname(__file__), "..", "assets")
+        
+        target = (400, 250)
+        self.idle_frames = load_animation(os.path.join(assets_dir, "golem_idle.png"), 4, 4, target_size=target)
+        self.move_frames = load_animation(os.path.join(assets_dir, "golem_move.png"), 4, 4, target_size=target)
+        self.at1_frames  = load_animation(os.path.join(assets_dir, "golem_attack1.png"), 5, 4, target_size=target)
+        self.at2_frames  = load_animation(os.path.join(assets_dir, "golem_attack2.png"), 6, 6, target_size=target)
 
-        # Chemins vers les fichiers
-        # Assurez-vous que golem_idle.png existe aussi en 4x4
-        path_idle = os.path.join(assets_dir, "golem_idle.png") # Test avec move si idle manque
-        path_move = os.path.join(assets_dir, "golem_move.png")
-        path_attack = os.path.join(assets_dir, "golem_attack1.png")
-        path_attack2 = os.path.join(assets_dir, "golem_attack2.png")
-
-        # On passe le nombre de colonnes et de lignes au lieu des pixels fixes
-        # Idle et Move sont en 4 colonnes, 4 lignes
-        self.idle_frames = self.load_animation(path_idle, cols=4, rows=4, count=16)
-        self.move_frames = self.load_animation(path_move, cols=4, rows=4, count=16)
-
-        # L'attaque est en 5 colonnes, 4 lignes (19 frames)
-        self.attack_frames = self.load_animation(path_attack, cols=5, rows=4, count=19)
-
-        # L'attaque 2 est en 8 colonnes, 6 lignes (44 frames)
-        self.attack2_frames = self.load_animation(path_attack2, cols=8, rows=6, count=44)
-
-        # États
         self.current_animation = self.idle_frames
         self.is_moving = False
         self.is_attacking = False
-        self.current_attack_type = 1
+        self.attack_type = None 
         self.flip = False
 
         self.current_frame = 0
         self.image = self.current_animation[0]
-        self.rect = pygame.Rect(100, 100, 64, 64) # Rectangle de collision plus petit que l'image
+        self.rect  = self.image.get_rect()
+        
+        # Position initiale (Ajustée pour être dans le château)
+        self.position = [700, 700]
+        self.rect.center = self.position
+        
+        # Hitbox logique réelle aux pieds du Golem pour les collisions
+        self.hitbox = pygame.Rect(0, 0, 50, 30)
+        self.update_hitbox()
 
-        print(f"Player initialized - rect: {self.rect}, image size: {self.image.get_size()}")
-
-        self.animation_speed = 0.14
+        self.animation_speed = 0.17
         self.timer = 0
 
-    def load_animation(self, path, cols, rows, count):
-        if not os.path.exists(path):
-            print(f"ERREUR : Fichier introuvable {path}")
-            surf = pygame.Surface((self.target_w, self.target_h))
-            surf.fill((255, 0, 0))
-            return [surf]
+    def update_hitbox(self):
+        """Met à jour la position de la hitbox par rapport aux pieds du Golem"""
+        self.hitbox.center = (self.position[0], self.position[1] + 60)
 
-        sheet = pygame.image.load(path).convert_alpha()
-        sheet_w, sheet_h = sheet.get_size()
+    def attack1(self):
+        if not self.is_attacking: self.is_attacking, self.attack_type, self.current_frame, self.timer = True, 1, 0, 0
+    def attack2(self):
+        if not self.is_attacking: self.is_attacking, self.attack_type, self.current_frame, self.timer = True, 2, 0, 0
 
-        # On calcule la taille d'une cellule en divisant la taille totale par le nombre de colonnes/lignes
-        cell_w = sheet_w // cols
-        cell_h = sheet_h // rows
+    def save_location(self): self.old_position = self.position.copy()
 
-        frames = []
-        for i in range(count):
-            col = i % cols
-            row = i // cols
-
-            # On découpe la cellule entière
-            frame = sheet.subsurface((col * cell_w, row * cell_h, cell_w, cell_h))
-            # On redimensionne à la taille souhaitée en jeu (ex: 128x128)
-            frame = pygame.transform.scale(frame, (self.target_w, self.target_h))
-            frames.append(frame)
-        return frames
-
-    def attack(self, attack_type=1):
-        if not self.is_attacking:
-            self.is_attacking = True
-            self.current_attack_type = attack_type
-            self.current_frame = 0
-            self.timer = 0
-            if attack_type == 1:
-                self.current_animation = self.attack_frames
-            else:
-                self.current_animation = self.attack2_frames
-
-    def move(self, map_w, map_h):
-        if self.is_attacking: return
+    def move(self, walls, map_w, map_h):
+        if self.is_attacking:
+            return
 
         keys = pygame.key.get_pressed()
+        dx, dy = 0, 0
         self.is_moving = False
-        move_x, move_y = 0, 0
 
         if keys[pygame.K_q] or keys[pygame.K_LEFT]:
-            move_x, self.is_moving, self.flip = -self.speed, True, True
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            move_x, self.is_moving, self.flip = self.speed, True, False
+            dx -= self.speed
+            self.is_moving, self.flip = True, True
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            dx += self.speed
+            self.is_moving, self.flip = True, False
+
         if keys[pygame.K_z] or keys[pygame.K_UP]:
-            move_y, self.is_moving = -self.speed, True
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            move_y, self.is_moving = self.speed, True
+            dy -= self.speed
+            self.is_moving = True
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
+            dy += self.speed
+            self.is_moving = True
 
-        self.rect.x += move_x
-        self.rect.y += move_y
-        self.rect.x = max(0, min(self.rect.x, map_w - self.rect.width))
-        self.rect.y = max(0, min(self.rect.y, map_h - self.rect.height))
+        # Axe X: bloque uniquement horizontalement si collision
+        if dx:
+            self.position[0] += dx
+            self.update_hitbox()
+            for wall in walls:
+                if self.hitbox.colliderect(wall):
+                    self.position[0] -= dx
+                    self.update_hitbox()
+                    break
 
-    def update(self, map_w, map_h):
-        old_animation_set = self.current_animation
-        self.move(map_w, map_h)
+        # Axe Y: bloque uniquement verticalement si collision
+        if dy:
+            self.position[1] += dy
+            self.update_hitbox()
+            for wall in walls:
+                if self.hitbox.colliderect(wall):
+                    self.position[1] -= dy
+                    self.update_hitbox()
+                    break
 
-        target_animation_set = self.idle_frames
+        # Garde le joueur dans les limites de la carte
+        self.position[0] = max(0, min(self.position[0], map_w))
+        self.position[1] = max(0, min(self.position[1], map_h))
+        self.update_hitbox()
+        self.rect.center = self.position
+
+    def update(self):
+        self.rect.center = self.position
+
+        # Animation
+        target = self.idle_frames
         if self.is_attacking:
-            target_animation_set = self.attack2_frames if self.current_attack_type == 2 else self.attack_frames
+            target = self.at2_frames if self.attack_type == 2 else self.at1_frames
         elif self.is_moving:
-            target_animation_set = self.move_frames
+            target = self.move_frames
 
-        if self.current_animation != target_animation_set:
-            if not (old_animation_set == self.move_frames and target_animation_set == self.idle_frames):
-                if not self.is_attacking: self.current_frame = 0
-            self.current_animation = target_animation_set
+        if self.current_animation is not target:
+            self.current_frame = 0
+            self.timer = 0
+            self.current_animation = target
 
         self.timer += self.animation_speed
         if self.timer >= 1:
             self.timer = 0
             self.current_frame += 1
+            if self.is_attacking and self.current_frame >= len(self.current_animation):
+                self.is_attacking = False
+                self.current_frame = 0
+            else:
+                self.current_frame %= len(self.current_animation)
 
-            if self.is_attacking:
-                if self.current_frame >= len(self.current_animation):
-                    self.is_attacking = False
-                    self.current_frame = 0
-                    self.current_animation = self.idle_frames if not self.is_moving else self.move_frames
+        img = self.current_animation[min(self.current_frame, len(self.current_animation)-1)]
+        self.image = pygame.transform.flip(img, self.flip, False)
 
-            self.current_frame %= len(self.current_animation)
+    def back_to_old_position(self):
+        self.position = self.old_position.copy()
+        self.update_hitbox()
+        self.rect.center = self.position
 
-        image_to_display = self.current_animation[min(self.current_frame, len(self.current_animation)-1)]
-        self.image = pygame.transform.flip(image_to_display, self.flip, False)
+# ==========================================
+# CLASSE PRINCIPALE (Game)
+# ==========================================
+class Game:
+    def __init__(self):
+        self.fenetre = pygame.display.set_mode(Resolution)
+        pygame.display.set_caption("Niveau Player Top")
+
+        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "mapfightfinalboss.tmx")
+        self.tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
+        
+        map_data  = pyscroll.data.TiledMapData(self.tmx_data)
+        map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.fenetre.get_size())
+        
+        # default_layer=10 pour être au-dessus de TOUS les calques de la carte
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=10)
+
+        # Extraction des collisions depuis le calque d'objets "collision"
+        self.walls = []
+        collision_layer = None
+        for layer in self.tmx_data.layers:
+            if getattr(layer, "name", "").lower() == "collision":
+                collision_layer = layer
+                break
+
+        if collision_layer is not None:
+            for obj in collision_layer:
+                if getattr(obj, "width", 0) and getattr(obj, "height", 0):
+                    self.walls.append(pygame.Rect(int(obj.x), int(obj.y), int(obj.width), int(obj.height)))
+
+        print(f"Collisions chargees: {len(self.walls)}")
+
+        self.player = Player()
+        self.group.add(self.player)
+        self.clock = pygame.time.Clock()
+
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: running = False
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE: running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 3: self.player.attack1() # Click Droit
+                    if event.button == 1: self.player.attack2() # Click Gauche
+
+            self.player.move(self.walls, self.tmx_data.width * self.tmx_data.tilewidth, self.tmx_data.height * self.tmx_data.tileheight)
+
+            self.group.update()
+            self.group.center(self.player.rect.center)
+            self.group.draw(self.fenetre)
+            pygame.display.flip()
+            self.clock.tick(60)
+        pygame.quit()
 
 if __name__ == "__main__":
     game = Game()
