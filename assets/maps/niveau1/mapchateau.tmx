@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="182">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="184">
  <tileset firstgid="1" source="../tout.tsx"/>
  <tileset firstgid="2965" source="../arbreneige.tsx"/>
  <tileset firstgid="3145" source="../arbrevikings.tsx"/>
@@ -391,18 +391,7 @@
   <object id="71" x="2602" y="2174" width="85.3333" height="23.3333"/>
   <object id="72" x="2682.67" y="2176.67" width="178" height="18"/>
   <object id="73" x="2522.67" y="1786.67" width="21.3333" height="60.6667"/>
-  <object id="79" x="2402" y="1652" width="22.6667" height="13.3333"/>
-  <object id="80" x="2328.67" y="1732.67" width="188" height="12.6667"/>
   <object id="81" x="2509.33" y="1701.33" width="1.33333" height="3.33333"/>
-  <object id="82" x="2467.33" y="1682.67">
-   <polygon points="0,0 36,40 -142.667,39.3333"/>
-  </object>
-  <object id="83" x="2405.33" y="1645.67">
-   <polygon points="0,0 106.667,50 -30,52.6667"/>
-  </object>
-  <object id="84" x="2383" y="1688.67">
-   <polygon points="0,0 -17.3333,48 80,96.6667"/>
-  </object>
   <object id="85" x="2409.33" y="1520" width="30.6667" height="88"/>
   <object id="86" x="2320" y="1528" width="14.6667" height="141.333"/>
   <object id="87" x="2701.33" y="889.333" width="25.3333" height="82.6667"/>
@@ -497,6 +486,8 @@
   </object>
   <object id="179" x="2128.67" y="1111.33" width="13.3333" height="91.3333"/>
   <object id="180" x="2092.67" y="957.333" width="31.3333" height="133.333"/>
+  <object id="182" x="2287.5" y="1629.5" width="129.5" height="139.5"/>
+  <object id="183" x="2420.5" y="1633.5" width="26.5" height="136"/>
  </objectgroup>
  <layer id="6" name="solmax" width="100" height="100">
   <data encoding="csv">
