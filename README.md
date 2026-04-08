@@ -103,37 +103,31 @@ Ice_Golem_Adventure/
 ├── main.py                  # 🎬 Point d'entrée du jeu
 │
 ├── entities/                # 👾 Entités du jeu
+│   ├── boss.py              #    Boss final (Smog)
 │   ├── constante.py         #    Constantes globales (résolution, physique, vitesses…)
+│   ├── mirror.py            #    Cristaux/miroirs (niveau 2)
+│   ├── platform_sol.py      #    Plateformes et sols
 │   ├── player_side.py       #    Joueur — vue de côté (platformer)
 │   ├── player_top.py        #    Joueur — vue de dessus (puzzle)
-│   ├── boss.py              #    Boss final (Smog)
-│   ├── mirror.py            #    Cristaux/miroirs (niveau 2)
-│   ├── platform-sol.py      #    Plateformes et sols
 │   └── projectile.py        #    Boules de neige (projectiles)
 │
 ├── scenes/                  # 🎭 Scènes du jeu
-│   ├── menu.py              #    Menu principal + paramètres
 │   ├── cutscene.py          #    Cinématiques (logo, intro, game over…)
 │   ├── game_over.py         #    Écran de fin de partie
 │   ├── level1.py            #    Niveau 1 — Le Parcours
 │   ├── level2.py            #    Niveau 2 — L'Énigme des Miroirs
-│   └── level3.py            #    Niveau 3 — Le Combat Final
+│   ├── level3.py            #    Niveau 3 — Le Combat Final
+│   └── menu.py              #    Menu principal + paramètres
 │
 ├── utils/                   # 🔧 Utilitaires
 │   └── physics.py           #    Moteur physique (gravité, collisions)
 │
 ├── assets/                  # 🎨 Ressources graphiques et audio
-│   ├── ice_logo.png         #    Logo du jeu
-│   ├── fond_menu.png        #    Fond d'écran du menu
-│   ├── golem_idle.png       #    Sprites du golem (idle, move, attack…)
-│   ├── golem_move.png       #    …
-│   ├── golem_attack1.png    #    …
-│   ├── golem_attack2.png    #    …
-│   ├── troll_idle.png       #    Sprite du boss
-│   ├── musique-menu.mp3     #    Musique du menu
-│   ├── *.tmx                #    Cartes des niveaux (Tiled Map Editor)
-│   ├── *.tsx                #    Tilesets (Tiled Map Editor)
-│   └── …                   #    Autres assets (boutons, décors, fonds…)
+│   ├── audio/               #    Musiques et effets sonores
+│   ├── backgrounds/         #    Fonds d'écran (menu, niveaux, cinématiques)
+│   ├── maps/                #    Cartes des niveaux (.tmx) et tilesets (.tsx)
+│   ├── sprites/             #    Sprites des personnages (golem, ennemis, boss)
+│   └── ui/                  #    Éléments d'interface utilisateur (boutons, logos)
 │
 ├── .gitignore               # Fichiers ignorés par Git
 ├── projet.md                # Résumé du projet
@@ -144,7 +138,7 @@ Ice_Golem_Adventure/
 
 ## 📸 Captures d'écran
 
-> 🖼️ *Les captures d'écran seront ajoutées prochainement.*
+> 🖼️ *Voici un aperçu des différents écrans du jeu.*
 
 <!--
 Ajoutez vos captures ici au format :
@@ -153,7 +147,7 @@ Ajoutez vos captures ici au format :
 
 | Menu principal | Niveau 1 | Niveau 2 | Niveau 3 |
 |:-:|:-:|:-:|:-:|
-| *À venir* | *À venir* | *À venir* | *À venir* |
+| ![Menu](assets/backgrounds/capture_menu.png) | *À venir* | *À venir* | *À venir* |
 
 ---
 
