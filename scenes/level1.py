@@ -13,11 +13,18 @@ from scenes.game_over import cinematique_mort
 # -------------------------------------------------------
 # BOUCLE PRINCIPALE DU NIVEAU 1 (VUE DE COTE - PARKOUR)
 # -------------------------------------------------------
-def lancer_niveau_1(fenetre):
+def lancer_niveau_1(fenetre, volume_musique=0.5):
     """Lance le niveau 1 en vue de côté.
     Retourne True pour revenir au menu, False pour quitter.
     """
     horloge = pygame.time.Clock()
+
+    # --- Musique de fond niveau 1 ---
+    if os.path.exists('assets/audio/musique_level1.mp3'):
+        pygame.mixer.music.load('assets/audio/musique_level1.mp3')
+        pygame.mixer.music.set_volume(volume_musique)
+        pygame.mixer.music.play(-1)
+
 
     # --- Dimensions du niveau ---
     largeur_niveau = 3600
@@ -119,6 +126,12 @@ def lancer_niveau_1(fenetre):
             texte_indication = police.render("Appuyez sur 'E' pour entrer", True, (255, 255, 255))
             touches = pygame.key.get_pressed()
             if touches[pygame.K_e]:
+                pygame.mixer.music.stop()
+                from scenes.cutscene import cinematique_transition_niveau_1
+                ok = cinematique_transition_niveau_1(fenetre)
+                if not ok:
+                    pygame.quit()
+                    sys.exit()
                 from entities.player_top import Game
                 game = Game()
                 game.run()
@@ -165,6 +178,7 @@ def lancer_niveau_1(fenetre):
 
     # ---- CINEMATIQUE DE MORT ----
     if joueur["mort"]:
+        pygame.mixer.music.stop()
         cinematique_mort(fenetre)
         return True
 

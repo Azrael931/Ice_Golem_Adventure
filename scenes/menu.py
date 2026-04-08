@@ -88,7 +88,7 @@ def menu_principal(fenetre):
                         if not ok:
                             pygame.quit()
                             sys.exit()
-                        result = lancer_niveau_1(fenetre)
+                        result = lancer_niveau_1(fenetre, volume_actuel)
                         if not result:
                             pygame.quit()
                             sys.exit()
