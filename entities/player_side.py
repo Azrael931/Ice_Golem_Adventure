@@ -100,8 +100,9 @@ def deplacer_joueur(joueur, largeur_niveau=Resolution[0]):
     if golem_rect.x > largeur_niveau - 40:
         golem_rect.x = largeur_niveau - 40
 
-    # Gravité
-    joueur["vitesse_y"] += gravite
+    # Gravité (via le moteur physique)
+    from utils.physics import appliquer_gravite
+    joueur["vitesse_y"] = appliquer_gravite(joueur["vitesse_y"], gravite)
     golem_rect.y += joueur["vitesse_y"]
     if joueur["vitesse_y"] < 0:
         joueur["etat"] = "saut"

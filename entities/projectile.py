@@ -20,16 +20,8 @@ def creer_projectile(origine_x, origine_y, cible_x, cible_y):
     en direction du point (cible_x, cible_y).
     Retourne un dictionnaire représentant le projectile.
     """
-    dx = cible_x - origine_x
-    dy = cible_y - origine_y
-    distance = math.sqrt(dx * dx + dy * dy)
-
-    if distance == 0:
-        vx = projectile_vitesse
-        vy = 0.0
-    else:
-        vx = (dx / distance) * projectile_vitesse
-        vy = (dy / distance) * projectile_vitesse
+    from utils.physics import calculer_vecteur_vitesse
+    vx, vy = calculer_vecteur_vitesse(origine_x, origine_y, cible_x, cible_y, projectile_vitesse)
 
     projectile = {}
     projectile["x"]         = float(origine_x)
@@ -57,8 +49,9 @@ def mettre_a_jour_projectiles(projectiles, largeur_ecran, hauteur_ecran):
     while i < len(projectiles):
         p = projectiles[i]
 
-        # Physique parabolique : la gravité incurve la trajectoire vers le bas
-        p["vy"] += projectile_gravite
+        # Physique parabolique via notre moteur
+        from utils.physics import appliquer_gravite
+        p["vy"] = appliquer_gravite(p["vy"], projectile_gravite)
 
         # Déplacement
         p["x"] += p["vx"]
