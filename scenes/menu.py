@@ -6,7 +6,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from entities.constante import *
-from entities.player_side import lancer_jeu_side
+from scenes.level1 import lancer_niveau_1
 from scenes.cutscene import cinematique_intro
 
 
@@ -88,7 +88,7 @@ def menu_principal(fenetre):
                         if not ok:
                             pygame.quit()
                             sys.exit()
-                        result = lancer_jeu_side(fenetre)
+                        result = lancer_niveau_1(fenetre)
                         if not result:
                             pygame.quit()
                             sys.exit()
