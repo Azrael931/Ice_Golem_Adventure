@@ -165,7 +165,7 @@ class Game:
         self.fenetre = pygame.display.set_mode(Resolution)
         pygame.display.set_caption("Niveau Player Top")
 
-        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "niveau3", "mapfightfinalboss.tmx")
+        tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "niveau2", "mapchateau.tmx")
         self.tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
         
         map_data  = pyscroll.data.TiledMapData(self.tmx_data)
