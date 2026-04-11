@@ -3,6 +3,13 @@ import pytmx
 import pyscroll
 import sys
 import os
+import random
+
+# Importation des monstres aléatoire
+from entities.monster import Monster
+
+# Game over Cinématique
+from scenes.game_over import cinematique_mort
 
 # Configuration du chemin pour l'import des constantes
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -57,6 +64,9 @@ class Player(pygame.sprite.Sprite):
         # Position initiale (Ajustée pour être dans le château)
         self.position = [700, 700]
         self.rect.center = self.position
+
+        # hp du joueur
+        self.hp = 100
         
         # Hitbox logique réelle aux pieds du Golem pour les collisions
         self.hitbox = pygame.Rect(0, 0, 50, 30)
@@ -191,6 +201,31 @@ class Game:
 
         self.player = Player()
         self.group.add(self.player)
+
+        # Groupe de monstres
+        self.monsters = pygame.sprite.Group()
+
+        # Dimensions de la map
+        map_w = self.tmx_data.width * self.tmx_data.tilewidth
+        map_h = self.tmx_data.height * self.tmx_data.tileheight
+
+        # Spawn de plusieurs monstres aléatoires
+        for _ in range(15):
+            while True:
+                x = random.randint(100, map_w - 100)
+                y = random.randint(100, map_h - 100)
+
+                dx = x - self.player.position[0]
+                dy = y - self.player.position[1]
+                distance = (dx ** 2 + dy ** 2) ** 0.5
+
+                # Évite de faire spawn un monstre trop près du joueur
+                if distance > 200:
+                    monster = Monster(x, y)
+                    self.monsters.add(monster)
+                    self.group.add(monster)
+                    break
+
         self.clock = pygame.time.Clock()
 
     def run(self):
@@ -205,7 +240,43 @@ class Game:
 
             self.player.move(self.walls, self.tmx_data.width * self.tmx_data.tilewidth, self.tmx_data.height * self.tmx_data.tileheight)
 
-            self.group.update()
+            # Les attaques corps à corps du Joueur sur les monstres
+
+            attack_range = 100
+
+            for monster in self.monsters:
+                dx = self.player.position[0] - monster.position[0]
+                dy = self.player.position[1] - monster.position[1]
+                distance = (dx ** 2 + dy ** 2) ** 0.5
+
+                if self.player.is_attacking:
+                    if distance <= attack_range and not monster.hit_by_current_attack:
+                        monster.hp -= 1
+                        monster.hit_by_current_attack = True
+                        print("Monstre touché ! HP restants :", monster.hp)
+
+                        if monster.hp <= 0:
+                            monster.kill()
+                            print("Monstre mort !")
+                else:
+                    monster.hit_by_current_attack = False
+
+                # Attaques des Monstres
+                current_time = pygame.time.get_ticks()
+
+                if distance <= monster.attack_range:
+                    if current_time - monster.last_attack_time >= monster.attack_cooldown:
+                        self.player.hp -= monster.damage
+                        monster.last_attack_time = current_time
+                        print("Le joueur prend des dégâts ! HP :", self.player.hp)
+                if self.player.hp <= 0:
+                    return cinematique_mort(self.fenetre)
+
+
+
+            for monster in self.monsters:
+                monster.update(self.player)
+
             self.group.center(self.player.rect.center)
             self.group.draw(self.fenetre)
             pygame.display.flip()
