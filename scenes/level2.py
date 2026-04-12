@@ -213,8 +213,8 @@ class Game:
         # La statue 1 doit être poussée vers la cible (2640, 1650)
         statues_config = [
             {"pos": (2700, 1765), "cible": (2685, 1769)},
-            {"pos": (2600, 7700), "cible": None},
-            {"pos": (940, 12805), "cible": None},
+            {"pos": (2550, 670), "cible": None},
+            {"pos": (670, 1393), "cible": (925, 1306)},
         ]
         self.statues = []
         i = 0
@@ -230,9 +230,23 @@ class Game:
             print("Statue {} placee en ({}, {})".format(i + 1, cfg["pos"][0], cfg["pos"][1]))
             i += 1
 
+        # La statue 2 (index 1) est déjà déployée au départ
+        self.statues[1]["active"] = True
+        self.statues[1]["image"] = self.statues[1]["image_deployee"]
+        statue_mod.update_statue(self.statues[1])
+
         # Police pour afficher les indications
         pygame.font.init()
         self.police = pygame.font.SysFont("Consolas", 16, bold=True)
+
+        # Portail
+        portail_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "portail.png")
+        if os.path.exists(portail_path):
+            self.image_portail = pygame.image.load(portail_path).convert_alpha()
+            self.image_portail = pygame.transform.scale(self.image_portail, (120, 120))
+            self.rect_portail = self.image_portail.get_rect(center=(1864, 1135))
+        else:
+            self.image_portail = None
 
     def run(self):
         running = True
@@ -250,7 +264,7 @@ class Game:
             self.player.move(self.walls, self.map_w, self.map_h)
 
             # ── AFFICHAGE POSITION JOUEUR DANS LA CONSOLE ──
-            print("Joueur : x={}, y={}".format(int(self.player.position[0]), int(self.player.position[1])), end="\r")
+            print("Joueur : x={}, y={}          ".format(int(self.player.position[0]), int(self.player.position[1])), end="\r")
 
             # ── POUSSEE DES STATUES (collision joueur) ─────
             p = 0
@@ -292,6 +306,28 @@ class Game:
                     txt_y = self.statues[n]["rect"].top + offset_y - 25
                     self.fenetre.blit(txt_e, (txt_x, txt_y))
                 n += 1
+
+            # Affichage du portail et condition de victoire
+            toutes_deployees = True
+            for s in self.statues:
+                if not s["active"]:
+                    toutes_deployees = False
+                    break
+            
+            if toutes_deployees and getattr(self, "image_portail", None) is not None:
+                ecran_portail_x = self.rect_portail.x + offset_x
+                ecran_portail_y = self.rect_portail.y + offset_y
+                self.fenetre.blit(self.image_portail, (ecran_portail_x, ecran_portail_y))
+                
+                # Zone de collision (téléportation automatique)
+                import math
+                dist_joueur_portail = math.hypot(self.player.hitbox.centerx - self.rect_portail.centerx, 
+                                                 self.player.hitbox.centery - self.rect_portail.centery)
+                if dist_joueur_portail < 80:
+                    from entities.player_top import Game as PlayerTopGame
+                    next_game = PlayerTopGame()
+                    next_game.run()
+                    return
 
             pygame.display.flip()
             self.clock.tick(60)
