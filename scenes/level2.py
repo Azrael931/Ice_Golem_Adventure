@@ -212,7 +212,7 @@ class Game:
         # Création de 3 statues : (position_depart, cible ou None)
         # La statue 1 doit être poussée vers la cible (2640, 1650)
         statues_config = [
-            {"pos": (2700, 1765), "cible": (2640, 1650)},
+            {"pos": (2700, 1765), "cible": (2685, 1769)},
             {"pos": (2600, 7700), "cible": None},
             {"pos": (940, 12805), "cible": None},
         ]

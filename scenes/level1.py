@@ -132,10 +132,10 @@ def lancer_niveau_1(fenetre, volume_musique=0.5):
                 if not ok:
                     pygame.quit()
                     sys.exit()
-                from entities.player_top import Game
+                from scenes.level2 import Game
                 game = Game()
                 game.run()
-                return False  # Quitte après player_top (car player_top calls pygame.quit)
+                return False  # Quitte après level2
 
         # ---- GESTION CAMERA ----
         camera_x = max(0, min(golem_rect.centerx - Resolution[0] // 2, largeur_niveau - Resolution[0]))
