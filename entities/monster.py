@@ -23,6 +23,7 @@ class Monster(pygame.sprite.Sprite):
         self.attack_range = 60
         self.attack_cooldown = 800
         self.last_attack_time = 0
+        self.stunned_until = 0
 
         # Range des monstres
         self.detection_range = 300
