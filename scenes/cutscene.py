@@ -89,27 +89,39 @@ def cinematique_logo(fenetre):
 
 # Liste des lignes du monologue du scientifique
 MONOLOGUE = [
-    "Systeme de messagerie d'urgence active...",
-    "Si tu recois ce message, c'est que je suis",
-    "probablement... deja disparu.",
+    "Système de messagerie d'urgence active...",
+    "Si tu recois ce message, c'est qu'il est",
+    "deja trop tard pour moi.",
     "",
     "Je suis le Professeur Snow.",
-    "J'etais chercheur a la Station Polaire Omega.",
+    "Chercheur a la Station Polaire Omega.",
     "",
-    "Une experience a mal tourne.",
-    "Une creature de pollution colossale a ete creee :",
-    "Smog....",
+    "Nous avons pollue sans reflechir NOUS et L'HUMANITE entiere...",
+    "Et de nos erreurs est nee une creature de gaz toxiques ne de la pollution.",
+    "Son corps est forme de fumees noires, de CO2, de methane, d'oxydes d'azote et d'autres substances",
+    "dangereuses rejetees par les usines, les voitures et les incendies .",
+    "Plus il grossit, plus il emprisonne la chaleur autour de la Terre.",
+    "Ce qui fait monter la temperature de plusieurs degres.",
+    "S'il devient trop puissant, il pourrait detruire des ecosystemes entiers et provoquer la disparition de nombreuses especes",
+    "On le surnomme Smog.",
     "",
-    "Il a detruit la station... et il menace",
-    "maintenant le monde entier.",
+    "Il a detruit la station et il fait fondre",
+    "nos glaciers et menace d'etouffer le monde.",
     "",
-    "Toi seul peux l'arreter.",
-    "Traverse les ruines,",
-    "récupère les pièces de la machine....,",
-    "pour le detruire....,",
+    "Imir... mon golem de glace...",
+    "Toi seul peux resister a sa chaleur toxique grace a un bouclier bleute inspire de la couche d'ozone, une protection celeste qui filtre les fumees toxiques et affaiblit le monstre de pollution..",
     "",
-    "Le destin du monde repose sur toi.",
-    "Bonne chance... Imir...",
+    "Il n'y a plus de machine a reparer.",
+    "Ton seul objectif desormais : la source.",
+    "",
+    "Traverse les ruines de notre monde deregle.",
+    "Surmonte les pieges de pollution qu'il a semes,",
+    "et va affronter Smog directement !",
+    "",
+    "Le destin de la planete repose sur toi.",
+    "Garde la tete froide...",
+    "Bonne chance... Imir.",
+
 ]
 
 
@@ -366,40 +378,34 @@ def cinematique_intro(fenetre):
 
 
 # -------------------------------------------------------
-# CINEMATIQUE 3 : Transition Niveau 1 vers Top-Down
+# CINEMATIQUE 2 : Transition Niveau 1 vers Top-Down
 # -------------------------------------------------------
+
 
 CINEMATIQUE_NIVEAU_1_FIN = [
     "...",
-    "Signal detecte.",
-    "Connexion holographique retablie...",
-    "",
+    "Signal holographique établi.",
     ">>> Professeur Snow <<<",
     "",
-    "Imir... tu l'as fait.",
-    "Tu as recupere la premiere piece.",
+    "Imir... tu es à l'air libre.",
+    "Mais sens-tu cette chaleur étouffante ?",
     "",
-    "Je savais que tu y arriverais.",
-    "La machine commence a reprendre vie...",
+    "La pollution de Smog piège la chaleur du soleil.",
+    "C'est l'effet de serre. Notre monde fond.",
+    "La glace sous tes pieds devient fragile...",
     "",
-    "Mais le chemin est loin d'etre termine.",
-    "Smog a corrompu tout le laboratoire.",
+    "Pour avancer, cherche les grandes statues",
+    "éparpillées dans la vallée.",
     "",
-    "La deuxieme piece est cachee",
-    "dans la salle des miroirs energetiques.",
-    "Un systeme de cristaux que j'avais concu",
-    "pour canaliser l'energie propre.",
+    "Ce sont les Piliers de l'Équilibre.",
+    "Comme les arbres, ils purifient le climat.",
+    "Mais cette chaleur les a endormis.",
     "",
-    "Smog l'a sabote... les miroirs sont",
-    "tous desalignes.",
+    "Touche-les ! Donne-leur ton énergie pure.",
+    "Relance le froid pour briser l'effet de serre",
+    "et ouvrir la porte vers le monstre.",
     "",
-    "Tu devras les repositionner",
-    "pour rouvrir le passage.",
-    "",
-    "Sois precis, Imir.",
-    "La lumiere est ta seule alliee la-dedans.",
-    "",
-    "Je compte sur toi...",
+    "La nature compte sur toi."
 ]
 
 
@@ -599,8 +605,8 @@ CINEMATIQUE_NIVEAU_2_FIN = [
     ">>> Professeur Snow <<<",
     "",
     "Imir... tu as réussi.",
-    "Les statues sont réalignées.",
-    "L'énergie pure circule à nouveau.",
+    "Les Sentinelles sont purifiées.",
+    "L'air pur circule à nouveau dans la vallée.",
     "",
     "Mais écoute-moi bien...",
     "",
@@ -629,6 +635,7 @@ CINEMATIQUE_NIVEAU_2_FIN = [
     "contre le vrai Smog.",
     "",
     "Maintenant va.",
+    "La porte de son repaire est ouverte.",
     "Affronte-le.",
     "Le monde de glace compte sur toi, Imir.",
     "",
@@ -911,3 +918,5 @@ CINEMATIQUE_NIVEAU_3_FIN = [
     "",
     "- Laurent, Parker, Mathieu, Romain et Stéfen"
 ]
+
+
