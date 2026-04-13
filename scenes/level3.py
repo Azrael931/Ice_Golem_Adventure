@@ -9,6 +9,7 @@ import math
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from entities.constante import Resolution
 from scenes.game_over import cinematique_mort
+from entities.monster import Monster
 
 pygame.init()
 
@@ -54,7 +55,7 @@ class Player(pygame.sprite.Sprite):
             os.path.join(sprites_dir, THROW_SPRITE_FILE),
             5, 4,
             target_size=target
-        )
+        )[:-1]  # enlève la dernière frame vide
 
         self.current_animation = self.idle_frames
         self.is_moving = False
@@ -87,6 +88,7 @@ class Player(pygame.sprite.Sprite):
         self.last_snowball_time = 0
         self.throw_ready = False
         self.throw_has_spawned = False
+        self.throw_start_time = 0
 
         # Mêlée
         self.attack_start_time = 0
@@ -115,6 +117,7 @@ class Player(pygame.sprite.Sprite):
             self.timer = 0
             self.throw_ready = False
             self.throw_has_spawned = False
+            self.throw_start_time = pygame.time.get_ticks()
 
     def save_location(self):
         self.old_position = self.position.copy()
@@ -188,8 +191,10 @@ class Player(pygame.sprite.Sprite):
 
             # Animation de lancer
             if self.is_throwing:
-                # Déclenchement du tir au milieu de l'anim
-                if self.current_frame >= 8 and not self.throw_has_spawned:
+                current_time = pygame.time.get_ticks()
+
+                # Lancer la boule 1 seconde après avoir appuyé sur E
+                if current_time - self.throw_start_time >= 1000 and not self.throw_has_spawned:
                     self.throw_ready = True
                     self.throw_has_spawned = True
 
@@ -213,74 +218,6 @@ class Player(pygame.sprite.Sprite):
         self.position = self.old_position.copy()
         self.update_hitbox()
         self.rect.center = self.position
-
-
-# ==========================================
-# CLASSE PETIT MONSTRE
-# ==========================================
-class Monster(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        super().__init__()
-
-        self.image = pygame.Surface((40, 40), pygame.SRCALPHA)
-        self.image.fill((220, 50, 50))
-
-        self.rect = self.image.get_rect(center=(x, y))
-        self.position = [float(x), float(y)]
-
-        self.speed = 1
-        self.hp = 2
-        self.hit_by_current_attack = False
-
-        self.detection_range = 320
-        self.stop_range = 55
-
-        self.damage = 15
-        self.attack_range = 60
-        self.attack_cooldown = 900
-        self.last_attack_time = 0
-        self.stunned_until = 0
-
-        self.is_boss = False
-
-        # Hitbox pieds
-        self.hitbox = pygame.Rect(0, 0, 30, 22)
-        self.update_hitbox()
-
-    def update_hitbox(self):
-        self.hitbox.center = (int(self.position[0]), int(self.position[1]) + 12)
-
-    def update(self, player, walls):
-        dx = player.position[0] - self.position[0]
-        dy = player.position[1] - self.position[1]
-        distance = (dx ** 2 + dy ** 2) ** 0.5
-
-        if self.stop_range < distance <= self.detection_range:
-            dx /= distance
-            dy /= distance
-
-            move_x = dx * self.speed
-            move_y = dy * self.speed
-
-            # Collision axe X
-            self.position[0] += move_x
-            self.update_hitbox()
-            for wall in walls:
-                if self.hitbox.colliderect(wall):
-                    self.position[0] -= move_x
-                    self.update_hitbox()
-                    break
-
-            # Collision axe Y
-            self.position[1] += move_y
-            self.update_hitbox()
-            for wall in walls:
-                if self.hitbox.colliderect(wall):
-                    self.position[1] -= move_y
-                    self.update_hitbox()
-                    break
-
-            self.rect.center = (int(self.position[0]), int(self.position[1]))
 
 
 # ==========================================
@@ -656,14 +593,21 @@ class Game:
                     print("Boss touche ! HP restants :", enemy.hp)
                 else:
                     enemy.stunned_until = current_time + 1600
+                    if hasattr(enemy, "is_hit"):
+                        enemy.is_hit = True
                     print("Monstre touche ! HP restants :", enemy.hp)
 
                 if enemy.hp <= 0:
-                    enemy.kill()
                     if getattr(enemy, "is_boss", False):
+                        enemy.kill()
                         print("Boss vaincu !")
                         self.boss = None
                     else:
+                        if hasattr(enemy, "is_dead"):
+                            enemy.is_dead = True
+                            enemy.current_frame = 0
+                        else:
+                            enemy.kill()
                         print("Monstre mort !")
 
         self.player.is_attacking = False
@@ -690,6 +634,8 @@ class Game:
                         enemy.stunned_until = pygame.time.get_ticks() + 700
                     else:
                         enemy.stunned_until = pygame.time.get_ticks() + 1200
+                        if hasattr(enemy, "is_hit"):
+                            enemy.is_hit = True
 
                     snowball.active = False
 
@@ -699,11 +645,16 @@ class Game:
                         print("Monstre touche par boule de neige ! HP restants :", enemy.hp)
 
                     if enemy.hp <= 0:
-                        enemy.kill()
                         if getattr(enemy, "is_boss", False):
+                            enemy.kill()
                             print("Boss vaincu !")
                             self.boss = None
                         else:
+                            if hasattr(enemy, "is_dead"):
+                                enemy.is_dead = True
+                                enemy.current_frame = 0
+                            else:
+                                enemy.kill()
                             print("Monstre mort !")
 
                     if snowball in self.snowballs:
@@ -714,6 +665,9 @@ class Game:
         current_time = pygame.time.get_ticks()
 
         for monster in self.monsters:
+            if getattr(monster, "is_dead", False):
+                continue
+
             dx = self.player.position[0] - monster.position[0]
             dy = self.player.position[1] - monster.position[1]
             distance = (dx ** 2 + dy ** 2) ** 0.5
