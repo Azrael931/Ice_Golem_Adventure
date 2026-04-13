@@ -216,9 +216,9 @@ class Game:
         # Création de 3 statues : (position_depart, cible ou None)
         # La statue 1 doit être poussée vers la cible (2640, 1650)
         statues_config = [
-            {"pos": (2700, 1765), "cible": (2685, 1769)},
-            {"pos": (2550, 670), "cible": None},
-            {"pos": (670, 1393), "cible": (925, 1306)},
+            {"pos": (2700, 1765), "cible": (2640, 1650)},
+            {"pos": (2600, 7700), "cible": None},
+            {"pos": (940, 12805), "cible": None},
         ]
         self.statues = []
         i = 0
@@ -262,6 +262,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 3: self.player.attack1()  # Click Droit
                     if event.button == 1: self.player.attack2()  # Click Gauche
+
 
             # ── DEPLACEMENT JOUEUR ──────────────────────
             self.player.move(self.walls, self.map_w, self.map_h)

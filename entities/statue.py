@@ -19,7 +19,7 @@ DISTANCE_INTERACTION = 120
 VITESSE_POUSSEE = 2
 
 # ── Tolérance pour considérer la statue sur sa cible ────
-TOLERANCE_CIBLE = 20
+TOLERANCE_CIBLE = 30
 
 
 def charger_tileset(chemin):
