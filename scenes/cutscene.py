@@ -99,7 +99,7 @@ MONOLOGUE = [
     "Nous avons pollue sans reflechir NOUS et L'HUMANITE entiere...",
     "Et de nos erreurs est nee une creature de gaz toxiques ne de la pollution.",
     "Son corps est forme de fumees noires, de CO2, de methane, d'oxydes d'azote et d'autres substances",
-    "dangereuses rejetees par les usines, les voitures et les incendies.",
+    "dangereuses rejetees par les usines, les voitures et les incendies .",
     "Plus il grossit, plus il emprisonne la chaleur autour de la Terre.",
     "Ce qui fait monter la temperature de plusieurs degres.",
     "S'il devient trop puissant, il pourrait detruire des ecosystemes entiers et provoquer la disparition de nombreuses especes",
