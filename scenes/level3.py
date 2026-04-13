@@ -3,11 +3,22 @@ import pytmx
 import pyscroll
 import sys
 import os
-import random
 import math
+import random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from entities.constante import Resolution
+from entities.constante import (
+    Resolution,
+    boss_hp_level3,
+    boss_damage_level3,
+    boss_projectile_speed_lvl3,
+    boss_projectile_damage_lvl3,
+    boss_projectile_cooldown_lvl3,
+    boss_shoot_range_level3,
+    smoke_size_level3,
+    smoke_max_distance_level3,
+    smoke_fade_start_level3,
+)
 from scenes.game_over import cinematique_mort
 from entities.monster import Monster
 
@@ -50,12 +61,11 @@ class Player(pygame.sprite.Sprite):
         self.at1_frames = load_animation(os.path.join(sprites_dir, "golem_attack1.png"), 5, 4, target_size=target)
         self.at2_frames = load_animation(os.path.join(sprites_dir, "golem_attack2.png"), 6, 6, target_size=target)
 
-        # Animation de lancer de boule de neige
         self.throw_frames = load_animation(
             os.path.join(sprites_dir, THROW_SPRITE_FILE),
             5, 4,
             target_size=target
-        )[:-1]  # enlève la dernière frame vide
+        )[:-1]
 
         self.current_animation = self.idle_frames
         self.is_moving = False
@@ -68,29 +78,24 @@ class Player(pygame.sprite.Sprite):
         self.image = self.current_animation[0]
         self.rect = self.image.get_rect()
 
-        # Spawn joueur niveau 3
         self.position = [800, 800]
         self.rect.center = self.position
 
-        # HP du joueur
         self.hp = 100
         self.hp_max = 100
 
-        # Hitbox logique réelle aux pieds du Golem pour les collisions
         self.hitbox = pygame.Rect(0, 0, 50, 30)
         self.update_hitbox()
 
         self.animation_speed = 0.17
         self.timer = 0
 
-        # Boules de neige
         self.snowball_cooldown = 1800
         self.last_snowball_time = 0
         self.throw_ready = False
         self.throw_has_spawned = False
         self.throw_start_time = 0
 
-        # Mêlée
         self.attack_start_time = 0
 
     def update_hitbox(self):
@@ -123,7 +128,6 @@ class Player(pygame.sprite.Sprite):
         self.old_position = self.position.copy()
 
     def move(self, walls, map_w, map_h):
-        # Non utilisé dans level3, on garde pour cohérence
         if self.is_attacking:
             return
 
@@ -189,11 +193,9 @@ class Player(pygame.sprite.Sprite):
             self.timer = 0
             self.current_frame += 1
 
-            # Animation de lancer
             if self.is_throwing:
                 current_time = pygame.time.get_ticks()
 
-                # Lancer la boule 1 seconde après avoir appuyé sur E
                 if current_time - self.throw_start_time >= 1000 and not self.throw_has_spawned:
                     self.throw_ready = True
                     self.throw_has_spawned = True
@@ -227,28 +229,26 @@ class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
 
-        # Gros carré rouge
         self.image = pygame.Surface((140, 140), pygame.SRCALPHA)
         self.image.fill((220, 30, 30))
 
         self.rect = self.image.get_rect(center=(x, y))
         self.position = [float(x), float(y)]
 
-        self.hp = 45
-        self.hp_max = 45
+        self.hp = boss_hp_level3
+        self.hp_max = boss_hp_level3
         self.hit_by_current_attack = False
         self.is_boss = True
 
-        self.damage = 35
+        self.damage = boss_damage_level3
         self.attack_range = 0
         self.attack_cooldown = 0
         self.last_attack_time = 0
 
         self.stunned_until = 0
 
-        # Tir à distance plus lent
-        self.shoot_range = 520
-        self.projectile_cooldown = 3500
+        self.shoot_range = boss_shoot_range_level3
+        self.projectile_cooldown = boss_projectile_cooldown_lvl3
         self.last_projectile_time = 0
 
     def update(self, player):
@@ -321,9 +321,9 @@ class SmokeProjectile:
     def __init__(self, start_x, start_y, target_x, target_y):
         self.position = [float(start_x), float(start_y)]
 
-        self.size = 24
-        self.damage = 20
-        self.speed = 1.6
+        self.size = smoke_size_level3
+        self.damage = boss_projectile_damage_lvl3
+        self.speed = boss_projectile_speed_lvl3
 
         dx = target_x - start_x
         dy = target_y - start_y
@@ -337,8 +337,8 @@ class SmokeProjectile:
             self.vy = (dy / distance) * self.speed
 
         self.distance_travelled = 0
-        self.max_distance = 840
-        self.fade_start_distance = 520
+        self.max_distance = smoke_max_distance_level3
+        self.fade_start_distance = smoke_fade_start_level3
 
         self.alpha = 255
         self.active = True
@@ -426,7 +426,6 @@ class Game:
 
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=10)
 
-        # Collisions
         self.walls = []
         collision_layer = None
         for layer in self.tmx_data.layers:
@@ -445,7 +444,6 @@ class Game:
         self.group.add(self.player)
         self.clock = pygame.time.Clock()
 
-        # Combat spécifique niveau 3
         self.player_attack_duration = 1600
         self.player_attack_has_hit = False
         self.player_attack_protection = True
@@ -453,12 +451,10 @@ class Game:
         self.map_w = self.tmx_data.width * self.tmx_data.tilewidth
         self.map_h = self.tmx_data.height * self.tmx_data.tileheight
 
-        # Petits monstres
         self.monsters = pygame.sprite.Group()
         self.nb_monstres = 20
         self.spawn_monstres_aleatoires()
 
-        # Boss EXACTEMENT sur la dalle, au centre
         boss_x = self.map_w // 2
         boss_y = 400
         self.boss = Boss(boss_x, boss_y)
@@ -570,11 +566,9 @@ class Game:
         if not self.player.is_attacking:
             return
 
-        # attendre 1.6 s avant l'impact
         if current_time - self.player.attack_start_time < self.player_attack_duration:
             return
 
-        # éviter plusieurs hits pour une seule attaque
         if self.player_attack_has_hit:
             self.player.is_attacking = False
             return
@@ -595,6 +589,10 @@ class Game:
                     enemy.stunned_until = current_time + 1600
                     if hasattr(enemy, "is_hit"):
                         enemy.is_hit = True
+                    if hasattr(enemy, "is_attacking"):
+                        enemy.is_attacking = False
+                    if hasattr(enemy, "attack_has_hit"):
+                        enemy.attack_has_hit = False
                     print("Monstre touche ! HP restants :", enemy.hp)
 
                 if enemy.hp <= 0:
@@ -636,6 +634,10 @@ class Game:
                         enemy.stunned_until = pygame.time.get_ticks() + 1200
                         if hasattr(enemy, "is_hit"):
                             enemy.is_hit = True
+                        if hasattr(enemy, "is_attacking"):
+                            enemy.is_attacking = False
+                        if hasattr(enemy, "attack_has_hit"):
+                            enemy.attack_has_hit = False
 
                     snowball.active = False
 
@@ -672,19 +674,27 @@ class Game:
             dy = self.player.position[1] - monster.position[1]
             distance = (dx ** 2 + dy ** 2) ** 0.5
 
-            # pendant l'attaque du joueur, les petits monstres ne frappent pas
             if self.player.is_attacking and self.player_attack_protection:
                 continue
 
-            # stun
             if current_time < monster.stunned_until:
                 continue
 
-            if distance <= monster.attack_range:
-                if current_time - monster.last_attack_time >= monster.attack_cooldown:
+            if monster.is_attacking:
+                if (
+                    not monster.attack_has_hit
+                    and current_time - monster.attack_start_time >= monster.attack_hit_delay
+                    and distance <= monster.attack_range
+                ):
                     self.player.hp -= monster.damage
+                    monster.attack_has_hit = True
                     monster.last_attack_time = current_time
                     print("Le joueur prend des degats ! HP :", self.player.hp)
+
+                if monster.current_frame == len(monster.attack_frames) - 1:
+                    if monster.attack_has_hit:
+                        monster.is_attacking = False
+                        monster.attack_has_hit = False
 
         self.boss_launch_smoke()
 
@@ -750,7 +760,6 @@ class Game:
             dy += self.player.speed
             self.player.is_moving = True
 
-        # Axe X
         if dx:
             self.player.position[0] += dx
             self.player.update_hitbox()
@@ -760,7 +769,6 @@ class Game:
                     self.player.update_hitbox()
                     break
 
-        # Axe Y
         if dy:
             self.player.position[1] += dy
             self.player.update_hitbox()

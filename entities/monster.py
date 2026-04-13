@@ -2,6 +2,16 @@ import pygame
 import math
 import os
 
+from entities.constante import (
+    monster_hp_level3,
+    monster_damage_level3,
+    monster_speed_level3,
+    monster_attack_range_level3,
+    monster_attack_cooldown_lvl3,
+    monster_detection_range_lvl3,
+    monster_stop_range_lvl3,
+)
+
 
 def load_animation(path, cols, rows, target_size=None):
     if not os.path.exists(path):
@@ -34,7 +44,7 @@ class Monster(pygame.sprite.Sprite):
             target_size=(64, 64)
         )
 
-        # Découpage
+        # Découpage du sheet
         self.side_frames = frames[0:4]
         self.up_frames = frames[4:8]
         self.down_frames = frames[8:12]
@@ -49,14 +59,14 @@ class Monster(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x, y))
 
         self.position = [float(x), float(y)]
-        self.speed = 1
+        self.speed = monster_speed_level3
 
-        self.hp = 2
+        self.hp = monster_hp_level3
 
         # Combat
-        self.damage = 15
-        self.attack_range = 60
-        self.attack_cooldown = 1200
+        self.damage = monster_damage_level3
+        self.attack_range = monster_attack_range_level3
+        self.attack_cooldown = monster_attack_cooldown_lvl3
         self.last_attack_time = 0
         self.stunned_until = 0
 
@@ -66,13 +76,14 @@ class Monster(pygame.sprite.Sprite):
         self.attack_has_hit = False
 
         # IA
-        self.detection_range = 300
-        self.stop_range = 50
+        self.detection_range = monster_detection_range_lvl3
+        self.stop_range = monster_stop_range_lvl3
 
         self.hit_by_current_attack = False
         self.is_attacking = False
         self.is_hit = False
         self.is_dead = False
+        self.is_boss = False
         self.flip = False
 
         # Hitbox
@@ -83,23 +94,24 @@ class Monster(pygame.sprite.Sprite):
         self.hitbox.center = (int(self.position[0]), int(self.position[1]) + 12)
 
     def start_attack(self):
-        if not self.is_attacking:
+        if not self.is_attacking and not self.is_dead:
             self.is_attacking = True
             self.attack_start_time = pygame.time.get_ticks()
             self.attack_has_hit = False
             self.current_frame = 0
             self.timer = 0
 
-    def update(self, player, walls):
+    def update(self, player, walls=None):
         dx = player.position[0] - self.position[0]
         dy = player.position[1] - self.position[1]
         distance = math.hypot(dx, dy)
 
         current_time = pygame.time.get_ticks()
 
-        # Si stun, pas d'attaque ni déplacement
+        # Si stun, le monstre arrête son attaque
         if current_time < self.stunned_until:
             self.is_attacking = False
+            self.attack_has_hit = False
 
         # Choix direction
         if abs(dx) > abs(dy):
@@ -116,6 +128,7 @@ class Monster(pygame.sprite.Sprite):
             and current_time >= self.stunned_until
             and distance <= self.attack_range
             and current_time - self.last_attack_time >= self.attack_cooldown
+            and not self.is_attacking
         ):
             self.start_attack()
 
@@ -133,23 +146,27 @@ class Monster(pygame.sprite.Sprite):
             move_x = dx * self.speed
             move_y = dy * self.speed
 
-            # Collision axe X
-            self.position[0] += move_x
-            self.update_hitbox()
-            for wall in walls:
-                if self.hitbox.colliderect(wall):
-                    self.position[0] -= move_x
-                    self.update_hitbox()
-                    break
+            if walls is None:
+                self.position[0] += move_x
+                self.position[1] += move_y
+            else:
+                # Collision axe X
+                self.position[0] += move_x
+                self.update_hitbox()
+                for wall in walls:
+                    if self.hitbox.colliderect(wall):
+                        self.position[0] -= move_x
+                        self.update_hitbox()
+                        break
 
-            # Collision axe Y
-            self.position[1] += move_y
-            self.update_hitbox()
-            for wall in walls:
-                if self.hitbox.colliderect(wall):
-                    self.position[1] -= move_y
-                    self.update_hitbox()
-                    break
+                # Collision axe Y
+                self.position[1] += move_y
+                self.update_hitbox()
+                for wall in walls:
+                    if self.hitbox.colliderect(wall):
+                        self.position[1] -= move_y
+                        self.update_hitbox()
+                        break
 
         # Animation choisie
         if self.is_dead:
