@@ -324,9 +324,13 @@ class Game:
                 dist_joueur_portail = math.hypot(self.player.hitbox.centerx - self.rect_portail.centerx, 
                                                  self.player.hitbox.centery - self.rect_portail.centery)
                 if dist_joueur_portail < 80:
-                    from entities.player_top import Game as PlayerTopGame
-                    next_game = PlayerTopGame()
-                    next_game.run()
+                    from scenes.cutscene import cinematique_transition_niveau_2
+                    ok = cinematique_transition_niveau_2(self.fenetre)
+                    
+                    if ok:
+                        from entities.player_top import Game as PlayerTopGame
+                        next_game = PlayerTopGame()
+                        next_game.run()
                     return
 
             pygame.display.flip()

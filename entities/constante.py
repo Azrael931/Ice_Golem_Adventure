@@ -52,12 +52,3 @@ bouton_setting_2 = 'assets/ui/bouton_parametre_2.png'
 bouton_retour    = 'assets/ui/bouton_retour_1.png'
 bouton_retour_2  = 'assets/ui/bouton_retour_2.png'
 musique_menu     = 'assets/audio/musique-menu.mp3'
-
-# ── Projectile ───────────────────────────────────────────
-projectile_vitesse   = 12
-projectile_gravite   = 0.35
-projectile_rayon     = 6
-projectile_couleur   = (140, 210, 255)
-projectile_contour   = (200, 240, 255)
-projectile_duree_vie = 180
-
