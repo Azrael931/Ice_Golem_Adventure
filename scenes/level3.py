@@ -343,9 +343,8 @@ class SmokeProjectile:
     def __init__(self, start_x, start_y, target_x, target_y):
         self.position = [float(start_x), float(start_y)]
 
-        self.size = smoke_size_level3
-        self.damage = boss_projectile_damage_lvl3
-        self.speed = boss_projectile_speed_lvl3
+        self.damage = 20
+        self.speed = 1.2
 
         dx = target_x - start_x
         dy = target_y - start_y
@@ -359,11 +358,23 @@ class SmokeProjectile:
             self.vy = (dy / distance) * self.speed
 
         self.distance_travelled = 0
-        self.max_distance = smoke_max_distance_level3
-        self.fade_start_distance = smoke_fade_start_level3
+        self.max_distance = 800
+        self.fade_start_distance = 400
 
         self.alpha = 255
         self.active = True
+
+        sprites_dir = os.path.join(os.path.dirname(__file__), "..", "assets", "sprites")
+
+        self.frames = load_animation(
+            os.path.join(sprites_dir, "sprite_nuage.png"),
+            2, 1,
+            scale=0.17
+        )
+
+        self.current_frame = 0
+        self.timer = 0
+        self.animation_speed = 0.2
 
     def update(self, map_w, map_h):
         if not self.active:
@@ -377,7 +388,6 @@ class SmokeProjectile:
         if self.distance_travelled >= self.fade_start_distance:
             fade_progress = self.distance_travelled - self.fade_start_distance
             fade_range = self.max_distance - self.fade_start_distance
-
             if fade_range > 0:
                 self.alpha = max(0, int(255 * (1 - fade_progress / fade_range)))
 
@@ -393,12 +403,18 @@ class SmokeProjectile:
         if not self.active:
             return
 
+        self.timer += self.animation_speed
+        if self.timer >= 1:
+            self.timer = 0
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
+
+        img = self.frames[self.current_frame].copy()
+        img.set_alpha(max(0, int(self.alpha)))
+
         x = int(self.position[0] + offset_x)
         y = int(self.position[1] + offset_y)
 
-        surface = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
-        surface.fill((255, 140, 0, max(0, int(self.alpha))))
-        fenetre.blit(surface, (x - self.size // 2, y - self.size // 2))
+        fenetre.blit(img, (x - img.get_width() // 2, y - img.get_height() // 2))
 
     def collides_with_player(self, player):
         if not self.active:
@@ -407,7 +423,64 @@ class SmokeProjectile:
         dx = self.position[0] - player.position[0]
         dy = self.position[1] - player.position[1]
         distance = (dx ** 2 + dy ** 2) ** 0.5
-        return distance <= 30
+
+        return distance <= 40
+
+    def update(self, map_w, map_h):
+        if not self.active:
+            return
+
+        self.position[0] += self.vx
+        self.position[1] += self.vy
+
+        self.distance_travelled += self.speed
+
+        # fade (disparition progressive)
+        if self.distance_travelled >= self.fade_start_distance:
+            fade_progress = self.distance_travelled - self.fade_start_distance
+            fade_range = self.max_distance - self.fade_start_distance
+
+            if fade_range > 0:
+                self.alpha = max(0, int(255 * (1 - fade_progress / fade_range)))
+
+        # disparition
+        if self.distance_travelled >= self.max_distance or self.alpha <= 0:
+            self.active = False
+            return
+
+        if self.position[0] < 0 or self.position[0] > map_w or self.position[1] < 0 or self.position[1] > map_h:
+            self.active = False
+            return
+
+    def draw(self, fenetre, offset_x, offset_y):
+        if not self.active:
+            return
+
+        # animation
+        self.timer += self.animation_speed
+        if self.timer >= 1:
+            self.timer = 0
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
+
+        img = self.frames[self.current_frame]
+
+        x = int(self.position[0] + offset_x)
+        y = int(self.position[1] + offset_y)
+
+        # gestion transparence
+        img.set_alpha(max(0, int(self.alpha)))
+
+        fenetre.blit(img, (x - img.get_width() // 2, y - img.get_height() // 2))
+
+    def collides_with_player(self, player):
+        if not self.active:
+            return False
+
+        dx = self.position[0] - player.position[0]
+        dy = self.position[1] - player.position[1]
+        distance = (dx ** 2 + dy ** 2) ** 0.5
+
+        return distance <= 40
 
 
 # ==========================================
