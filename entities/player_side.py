@@ -61,9 +61,15 @@ def gerer_evenements_joueur(joueur, event):
         if event.key == pygame.K_ESCAPE:
             return "menu"
 
-        # --- [TEST] Touche T pour infliger 34 dégâts ---
         if event.key == pygame.K_t:
             infliger_degats(joueur, 34)
+
+    if event.type == pygame.JOYBUTTONDOWN:
+        if event.button == 0 and joueur["nb_sauts"] < 2:  # Bouton A (Croix)
+            joueur["vitesse_y"] = -player_jump
+            joueur["nb_sauts"] += 1
+        if event.button == 1 or event.button == 7:  # Bouton B (Rond) ou Start
+            return "menu"
 
     return None
 
@@ -80,11 +86,16 @@ def deplacer_joueur(joueur, largeur_niveau=Resolution[0]):
     joueur["vitesse_x"] = 0
     joueur["etat"] = "idle"
 
-    if touches[pygame.K_LEFT]:
+    joystick_x = 0
+    if pygame.joystick.get_count() > 0:
+        joystick = pygame.joystick.Joystick(0)
+        joystick_x = joystick.get_axis(0)
+
+    if touches[pygame.K_LEFT] or joystick_x < -0.2:
         joueur["vitesse_x"] = -player_speed
         joueur["etat"] = "marche"
         joueur["orientation"] = "gauche"
-    if touches[pygame.K_RIGHT]:
+    if touches[pygame.K_RIGHT] or joystick_x > 0.2:
         joueur["vitesse_x"] = player_speed
         joueur["etat"] = "marche"
         joueur["orientation"] = "droite"

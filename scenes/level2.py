@@ -93,17 +93,23 @@ class Player(pygame.sprite.Sprite):
         dx, dy = 0, 0
         self.is_moving = False
 
-        if keys[pygame.K_q] or keys[pygame.K_LEFT]:
+        joy_x, joy_y = 0, 0
+        if pygame.joystick.get_count() > 0:
+            joystick = pygame.joystick.Joystick(0)
+            joy_x = joystick.get_axis(0)
+            joy_y = joystick.get_axis(1)
+
+        if keys[pygame.K_q] or keys[pygame.K_LEFT] or joy_x < -0.2:
             dx -= self.speed
             self.is_moving, self.flip = True, True
-        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT] or joy_x > 0.2:
             dx += self.speed
             self.is_moving, self.flip = True, False
 
-        if keys[pygame.K_z] or keys[pygame.K_UP]:
+        if keys[pygame.K_z] or keys[pygame.K_UP] or joy_y < -0.2:
             dy -= self.speed
             self.is_moving = True
-        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN] or joy_y > 0.2:
             dy += self.speed
             self.is_moving = True
 
@@ -258,6 +264,10 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 3: self.player.attack1() # Click Droit
                     if event.button == 1: self.player.attack2() # Click Gauche
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7: running = False  # B ou Start
+                    if event.button == 2: self.player.attack1() # X (Carré)
+                    if event.button == 3: self.player.attack2() # Y (Triangle)
 
 
             # ── DEPLACEMENT JOUEUR ──────────────────────

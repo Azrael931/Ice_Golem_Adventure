@@ -766,19 +766,25 @@ class Game:
         dx, dy = 0, 0
         self.player.is_moving = False
 
-        if keys[pygame.K_q] or keys[pygame.K_LEFT]:
+        joy_x, joy_y = 0, 0
+        if pygame.joystick.get_count() > 0:
+            joystick = pygame.joystick.Joystick(0)
+            joy_x = joystick.get_axis(0)
+            joy_y = joystick.get_axis(1)
+
+        if keys[pygame.K_q] or keys[pygame.K_LEFT] or joy_x < -0.2:
             dx -= self.player.speed
             self.player.is_moving = True
             self.player.flip = True
-        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT] or joy_x > 0.2:
             dx += self.player.speed
             self.player.is_moving = True
             self.player.flip = False
 
-        if keys[pygame.K_z] or keys[pygame.K_UP]:
+        if keys[pygame.K_z] or keys[pygame.K_UP] or joy_y < -0.2:
             dy -= self.player.speed
             self.player.is_moving = True
-        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN] or joy_y > 0.2:
             dy += self.player.speed
             self.player.is_moving = True
 
@@ -826,6 +832,20 @@ class Game:
                         self.player_attack_has_hit = False
 
                     if event.button == 1:
+                        self.player.attack2()
+                        self.player.attack_start_time = pygame.time.get_ticks()
+                        self.player_attack_has_hit = False
+
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:  # B ou Start
+                        return "menu"
+                    if event.button == 0:  # A (Lancer la boule de neige)
+                        self.player.start_throw()
+                    if event.button == 2:  # X (Attaque 1)
+                        self.player.attack1()
+                        self.player.attack_start_time = pygame.time.get_ticks()
+                        self.player_attack_has_hit = False
+                    if event.button == 3:  # Y (Attaque 2)
                         self.player.attack2()
                         self.player.attack_start_time = pygame.time.get_ticks()
                         self.player_attack_has_hit = False

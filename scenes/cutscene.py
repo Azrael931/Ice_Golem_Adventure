@@ -35,7 +35,7 @@ def cinematique_logo(fenetre):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.JOYBUTTONDOWN:
                 return True
 
         alpha -= 5
@@ -55,7 +55,7 @@ def cinematique_logo(fenetre):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.JOYBUTTONDOWN:
                 return True
         pygame.display.flip()
         horloge.tick(60)
@@ -66,7 +66,7 @@ def cinematique_logo(fenetre):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.JOYBUTTONDOWN:
                 return True
 
         alpha += 5
@@ -232,6 +232,9 @@ def cinematique_intro(fenetre):
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
                     return True  # Passer toute la cinematique
         alpha -= 4
         if alpha < 0:
@@ -251,6 +254,9 @@ def cinematique_intro(fenetre):
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
                     return True
         alpha_boite += 8
         if alpha_boite > 200:
@@ -284,6 +290,11 @@ def cinematique_intro(fenetre):
                         return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         # Afficher la ligne directement en entier
+                        char_affiche = len(ligne_courante)
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:  # B ou Start
+                        return True
+                    if event.button == 0:  # A
                         char_affiche = len(ligne_courante)
 
             compteur_frames += 1
@@ -336,6 +347,11 @@ def cinematique_intro(fenetre):
                         return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         attente = False  # Passer a la ligne suivante
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:
+                        return True
+                    if event.button == 0:
+                        attente = False
             fenetre.blit(fond, (0, 0))
             fenetre.blit(overlay, (0, 0))
             lignes_visibles = lignes_affichees[-MAX_LIGNES_VISIBLES:]
@@ -355,6 +371,8 @@ def cinematique_intro(fenetre):
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         en_attente = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    en_attente = False
+                if event.type == pygame.JOYBUTTONDOWN:
                     en_attente = False
             fenetre.blit(fond, (0, 0))
             fenetre.blit(overlay, (0, 0))
@@ -455,6 +473,9 @@ def cinematique_transition_niveau_1(fenetre):
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
                     return True  # Passer toute la cinematique
         alpha -= 4
         if alpha < 0:
@@ -474,6 +495,9 @@ def cinematique_transition_niveau_1(fenetre):
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
                     return True
         alpha_boite += 8
         if alpha_boite > 200:
@@ -507,6 +531,11 @@ def cinematique_transition_niveau_1(fenetre):
                         return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         # Afficher la ligne directement en entier
+                        char_affiche = len(ligne_courante)
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:  # B ou Start
+                        return True
+                    if event.button == 0:  # A
                         char_affiche = len(ligne_courante)
 
             compteur_frames += 1
@@ -559,6 +588,11 @@ def cinematique_transition_niveau_1(fenetre):
                         return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         attente = False  # Passer a la ligne suivante
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:
+                        return True
+                    if event.button == 0:
+                        attente = False
             fenetre.blit(fond, (0, 0))
             fenetre.blit(overlay, (0, 0))
             lignes_visibles = lignes_affichees[-MAX_LIGNES_VISIBLES:]
@@ -578,6 +612,8 @@ def cinematique_transition_niveau_1(fenetre):
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         en_attente = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    en_attente = False
+                if event.type == pygame.JOYBUTTONDOWN:
                     en_attente = False
             fenetre.blit(fond, (0, 0))
             fenetre.blit(overlay, (0, 0))
@@ -690,6 +726,9 @@ def cinematique_transition_niveau_2(fenetre):
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
                     return True  # Passer toute la cinematique
         alpha -= 4
         if alpha < 0:
@@ -709,6 +748,9 @@ def cinematique_transition_niveau_2(fenetre):
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
                     return True
         alpha_boite += 8
         if alpha_boite > 200:
@@ -742,6 +784,11 @@ def cinematique_transition_niveau_2(fenetre):
                         return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         # Afficher la ligne directement en entier
+                        char_affiche = len(ligne_courante)
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:  # B ou Start
+                        return True
+                    if event.button == 0:  # A
                         char_affiche = len(ligne_courante)
 
             compteur_frames += 1
@@ -794,6 +841,11 @@ def cinematique_transition_niveau_2(fenetre):
                         return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         attente = False  # Passer a la ligne suivante
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:
+                        return True
+                    if event.button == 0:
+                        attente = False
             fenetre.blit(fond, (0, 0))
             fenetre.blit(overlay, (0, 0))
             lignes_visibles = lignes_affichees[-MAX_LIGNES_VISIBLES:]
@@ -813,6 +865,8 @@ def cinematique_transition_niveau_2(fenetre):
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         en_attente = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    en_attente = False
+                if event.type == pygame.JOYBUTTONDOWN:
                     en_attente = False
             fenetre.blit(fond, (0, 0))
             fenetre.blit(overlay, (0, 0))
@@ -965,6 +1019,9 @@ def cinematique_fin_jeu(fenetre):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return True
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 1 or event.button == 7:  # Bouton B ou Start
+                    return True
         alpha -= 4
         if alpha < 0: alpha = 0
         fenetre.blit(fond, (0, 0))
@@ -1007,6 +1064,11 @@ def cinematique_fin_jeu(fenetre):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: return True
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                        char_affiche = len(ligne_courante)
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1 or event.button == 7:  # B ou Start
+                        return True
+                    if event.button == 0:  # A
                         char_affiche = len(ligne_courante)
 
             compteur_frames += 1
@@ -1055,7 +1117,7 @@ def cinematique_fin_jeu(fenetre):
     while en_attente:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: return False
-            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.JOYBUTTONDOWN:
                 en_attente = False
         fenetre.blit(fond, (0, 0))
         fenetre.blit(overlay, (0, 0))

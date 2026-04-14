@@ -71,6 +71,20 @@ def menu_principal(fenetre):
 
     en_cours = True
     while en_cours:
+        # Émulation du curseur à la manette
+        if pygame.joystick.get_count() > 0:
+            joy = pygame.joystick.Joystick(0)
+            joy_x = joy.get_axis(0)
+            joy_y = joy.get_axis(1)
+            
+            # Si le stick est incliné au-delà d'un seuil
+            if abs(joy_x) > 0.2 or abs(joy_y) > 0.2:
+                m_x, m_y = pygame.mouse.get_pos()
+                vitesse_curseur = 10
+                nouvel_x = max(0, min(Resolution[0], m_x + int(joy_x * vitesse_curseur)))
+                nouvel_y = max(0, min(Resolution[1], m_y + int(joy_y * vitesse_curseur)))
+                pygame.mouse.set_pos((nouvel_x, nouvel_y))
+
         souris_pos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -104,6 +118,23 @@ def menu_principal(fenetre):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         en_cours = False
+
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == 1:  # Bouton B -> Quitter
+                        en_cours = False
+                    elif event.button == 0 or event.button == 7:  # Bouton A ou Start -> Jouer
+                        pygame.mixer.music.stop()
+                        ok = cinematique_intro(fenetre)
+                        if not ok:
+                            pygame.quit()
+                            sys.exit()
+                        result = lancer_niveau_1(fenetre, volume_actuel)
+                        if not result:
+                            pygame.quit()
+                            sys.exit()
+                        pygame.mixer.music.load(musique_menu)
+                        pygame.mixer.music.set_volume(volume_actuel)
+                        pygame.mixer.music.play(-1)
 
             # ---- ÉTAT PARAMÈTRES ----
             elif etat == "parametres":

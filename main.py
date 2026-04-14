@@ -11,6 +11,10 @@ from scenes.menu import menu_principal
 def executer_jeu():
     # Initialisation de Pygame
     pygame.init()
+    pygame.joystick.init()
+    joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+    for joystick in joysticks:
+        joystick.init()
 
     # Création de la fenêtre
     fenetre = pygame.display.set_mode(Resolution)
