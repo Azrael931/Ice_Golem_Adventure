@@ -108,30 +108,6 @@ def est_proche(rect_joueur, rect_statue, distance=DISTANCE_INTERACTION):
     return dist <= distance
 
 
-def interagir_statue(statue, rect_joueur):
-    """Gère l'interaction joueur/statue quand la touche E est pressée.
-
-    Si le joueur est proche, bascule l'état actif de la statue
-    (ailes repliées <-> ailes déployées).
-    Retourne True si l'interaction a eu lieu, False sinon.
-    """
-    if not est_proche(rect_joueur, statue["rect"]):
-        return False
-
-    # Bascule l'état
-    statue["active"] = not statue["active"]
-
-    # Met à jour l'image courante et recale le rect sur l'ancre
-    if statue["active"]:
-        statue["image"] = statue["image_deployee"]
-    else:
-        statue["image"] = statue["image_repliee"]
-
-    statue["rect"] = statue["image"].get_rect(midbottom=statue["ancre"])
-
-    return True
-
-
 def pousser_statue(statue, hitbox_joueur):
     """Pousse la statue si le joueur entre en collision avec elle.
 
@@ -271,17 +247,3 @@ def update_statue(statue):
         statue["rect"].width,
         hb_h
     )
-
-
-def draw_statue(surface, statue, camera_x=0, camera_y=0):
-    """Dessine la statue sur la surface de rendu, décalée par la caméra.
-
-    Paramètres :
-        surface  -- la fenêtre / surface Pygame de destination
-        statue   -- le dict représentant la statue
-        camera_x -- décalage horizontal de la caméra
-        camera_y -- décalage vertical de la caméra
-    """
-    dest_x = statue["rect"].x - camera_x
-    dest_y = statue["rect"].y - camera_y
-    surface.blit(statue["image"], (dest_x, dest_y))
