@@ -61,3 +61,40 @@ projectile_couleur   = (140, 210, 255)
 projectile_contour   = (200, 240, 255)
 projectile_duree_vie = 180
 
+# ── Boss Niveau 3 ─────────────────────────
+boss_hp_level3 = 45
+boss_damage_level3 = 35
+boss_shoot_range_level3 = 520
+
+# ── Projectiles fumée boss ────────────────
+boss_projectile_speed_lvl3 = 1.6
+boss_projectile_damage_lvl3 = 20
+boss_projectile_cooldown_lvl3 = 3500
+
+# ── Apparence fumée ───────────────────────
+smoke_size_level3 = 24
+smoke_max_distance_level3 = 840
+smoke_fade_start_level3 = 520
+
+# ── Niveau 3 / Monstres ────────────────────────────────
+monster_hp_level3 = 2
+monster_damage_level3 = 15
+monster_speed_level3 = 1
+monster_attack_range_level3 = 60
+monster_attack_cooldown_lvl3 = 1200
+monster_detection_range_lvl3 = 300
+monster_stop_range_lvl3 = 50
+
+# ── Niveau 3 / Boss ────────────────────────────────────
+boss_hp_level3 = 45
+boss_damage_level3 = 35
+boss_shoot_range_level3 = 520
+
+# ── Niveau 3 / Fumées du boss ──────────────────────────
+boss_projectile_speed_lvl3 = 1.6
+boss_projectile_damage_lvl3 = 20
+boss_projectile_cooldown_lvl3 = 3500
+
+smoke_size_level3 = 24
+smoke_max_distance_level3 = 840
+smoke_fade_start_level3 = 520

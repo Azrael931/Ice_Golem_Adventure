@@ -28,21 +28,27 @@ THROW_SPRITE_FILE = "golem_attack1.png"
 
 
 def load_animation(path, cols, rows, scale=1.0, target_size=None):
-    """Fonction universelle pour charger et découper une sprite sheet"""
     if not os.path.exists(path):
         return [pygame.Surface((32, 32), pygame.SRCALPHA)]
 
     sheet = pygame.image.load(path).convert_alpha()
-    frame_w, frame_h = sheet.get_width() // cols, sheet.get_height() // rows
+    frame_w = sheet.get_width() // cols
+    frame_h = sheet.get_height() // rows
+
     frames = []
     for row in range(rows):
         for col in range(cols):
             frame = sheet.subsurface((col * frame_w, row * frame_h, frame_w, frame_h))
+
             if target_size:
                 frame = pygame.transform.scale(frame, target_size)
             elif scale != 1.0:
-                frame = pygame.transform.scale(frame, (int(frame_w * scale), int(frame_h * scale)))
+                new_w = int(frame_w * scale)
+                new_h = int(frame_h * scale)
+                frame = pygame.transform.scale(frame, (new_w, new_h))
+
             frames.append(frame)
+
     return frames
 
 
@@ -229,9 +235,20 @@ class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
 
-        self.image = pygame.Surface((140, 140), pygame.SRCALPHA)
-        self.image.fill((220, 30, 30))
+        sprites_dir = os.path.join(os.path.dirname(__file__), "..", "assets", "sprites")
 
+        # taille
+        self.frames = load_animation(
+            os.path.join(sprites_dir, "bossnuages.png"),
+            2, 1,
+            scale=0.65
+        )
+
+        self.current_frame = 0
+        self.timer = 0
+        self.animation_speed = 0.1
+
+        self.image = self.frames[0]
         self.rect = self.image.get_rect(center=(x, y))
         self.position = [float(x), float(y)]
 
@@ -252,8 +269,13 @@ class Boss(pygame.sprite.Sprite):
         self.last_projectile_time = 0
 
     def update(self, player):
-        self.rect.center = (int(self.position[0]), int(self.position[1]))
+        self.timer += self.animation_speed
+        if self.timer >= 1:
+            self.timer = 0
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
 
+        self.image = self.frames[self.current_frame]
+        self.rect = self.image.get_rect(center=(int(self.position[0]), int(self.position[1])))
 
 # ==========================================
 # BOULE DE NEIGE
@@ -455,8 +477,8 @@ class Game:
         self.nb_monstres = 20
         self.spawn_monstres_aleatoires()
 
-        boss_x = self.map_w // 2
-        boss_y = 400
+        boss_x = self.map_w // 2 - 500
+        boss_y = 400 - 120
         self.boss = Boss(boss_x, boss_y)
         self.group.add(self.boss)
 

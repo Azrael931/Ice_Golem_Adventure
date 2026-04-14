@@ -13,7 +13,7 @@ from entities.constante import (
 )
 
 
-def load_animation(path, cols, rows, target_size=None):
+def load_animation(path, cols, rows, scale=1.0, target_size=None):
     if not os.path.exists(path):
         return [pygame.Surface((32, 32), pygame.SRCALPHA)]
 
@@ -25,8 +25,14 @@ def load_animation(path, cols, rows, target_size=None):
     for row in range(rows):
         for col in range(cols):
             frame = sheet.subsurface((col * frame_w, row * frame_h, frame_w, frame_h))
+
             if target_size:
                 frame = pygame.transform.scale(frame, target_size)
+            elif scale != 1.0:
+                new_w = int(frame_w * scale)
+                new_h = int(frame_h * scale)
+                frame = pygame.transform.scale(frame, (new_w, new_h))
+
             frames.append(frame)
 
     return frames
@@ -41,10 +47,9 @@ class Monster(pygame.sprite.Sprite):
         frames = load_animation(
             os.path.join(sprites_dir, "ZombieSheet.png"),
             4, 4,
-            target_size=(64, 64)
+            scale=2.5
         )
 
-        # Découpage du sheet
         self.side_frames = frames[0:4]
         self.up_frames = frames[4:8]
         self.down_frames = frames[8:12]
@@ -63,19 +68,16 @@ class Monster(pygame.sprite.Sprite):
 
         self.hp = monster_hp_level3
 
-        # Combat
         self.damage = monster_damage_level3
         self.attack_range = monster_attack_range_level3
         self.attack_cooldown = monster_attack_cooldown_lvl3
         self.last_attack_time = 0
         self.stunned_until = 0
 
-        # Retard d'impact de l'attaque
         self.attack_hit_delay = 1000
         self.attack_start_time = 0
         self.attack_has_hit = False
 
-        # IA
         self.detection_range = monster_detection_range_lvl3
         self.stop_range = monster_stop_range_lvl3
 
@@ -86,7 +88,6 @@ class Monster(pygame.sprite.Sprite):
         self.is_boss = False
         self.flip = False
 
-        # Hitbox
         self.hitbox = pygame.Rect(0, 0, 30, 22)
         self.update_hitbox()
 
@@ -108,12 +109,10 @@ class Monster(pygame.sprite.Sprite):
 
         current_time = pygame.time.get_ticks()
 
-        # Si stun, le monstre arrête son attaque
         if current_time < self.stunned_until:
             self.is_attacking = False
             self.attack_has_hit = False
 
-        # Choix direction
         if abs(dx) > abs(dy):
             move_anim = self.side_frames
             self.flip = dx < 0
@@ -122,7 +121,6 @@ class Monster(pygame.sprite.Sprite):
         else:
             move_anim = self.down_frames
 
-        # Déclenche attaque si proche
         if (
             not self.is_dead
             and current_time >= self.stunned_until
@@ -132,7 +130,6 @@ class Monster(pygame.sprite.Sprite):
         ):
             self.start_attack()
 
-        # Déplacement seulement si pas en attaque
         if (
             not self.is_dead
             and not self.is_attacking
@@ -150,7 +147,6 @@ class Monster(pygame.sprite.Sprite):
                 self.position[0] += move_x
                 self.position[1] += move_y
             else:
-                # Collision axe X
                 self.position[0] += move_x
                 self.update_hitbox()
                 for wall in walls:
@@ -159,7 +155,6 @@ class Monster(pygame.sprite.Sprite):
                         self.update_hitbox()
                         break
 
-                # Collision axe Y
                 self.position[1] += move_y
                 self.update_hitbox()
                 for wall in walls:
@@ -168,7 +163,6 @@ class Monster(pygame.sprite.Sprite):
                         self.update_hitbox()
                         break
 
-        # Animation choisie
         if self.is_dead:
             self.current_animation = [self.attack_frames[-1]]
         elif self.is_attacking:
@@ -176,7 +170,6 @@ class Monster(pygame.sprite.Sprite):
         else:
             self.current_animation = move_anim
 
-        # Animation frame
         self.timer += self.animation_speed
         if self.timer >= 1:
             self.timer = 0
