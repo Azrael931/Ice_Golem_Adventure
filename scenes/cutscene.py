@@ -403,7 +403,7 @@ CINEMATIQUE_NIVEAU_1_FIN = [
     "Pour avancer, cherche les grandes statues",
     "éparpillées dans un vieux chateau.",
     "",
-    "Ce sont les Piliers de l'ÉEuilibre.",
+    "Ce sont les Piliers de l'Équilibre.",
     "Comme les arbres, ils purifient le climat.",
     "Mais cette chaleur les a endormis.",
     "",
