@@ -328,8 +328,8 @@ class Game:
                     ok = cinematique_transition_niveau_2(self.fenetre)
                     
                     if ok:
-                        from entities.player_top import Game as PlayerTopGame
-                        next_game = PlayerTopGame()
+                        from scenes.level3 import Game as Level3Game
+                        next_game = Level3Game()
                         next_game.run()
                     return
 

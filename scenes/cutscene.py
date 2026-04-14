@@ -925,4 +925,153 @@ CINEMATIQUE_NIVEAU_3_FIN = [
     "- Laurent, Parker, Mathieu, Romain et Stéfen"
 ]
 
+def cinematique_fin_jeu(fenetre):
+    """
+    Affiche la cinématique finale de victoire avec l'image win.png
+    et le long monologue de conclusion.
+    """
+    screen_w, screen_h = fenetre.get_size()
 
+    # Son de frappe machine a ecrire (genere synthetiquement)
+    son_frappe = _creer_son_frappe()
+
+    # Chargement de l'image de fond de victoire
+    if os.path.exists('assets/backgrounds/win.png'):
+        fond = pygame.image.load('assets/backgrounds/win.png').convert()
+    else:
+        fond = pygame.image.load('assets/ui/fond_menu.png').convert()
+    fond = pygame.transform.scale(fond, (screen_w, screen_h))
+
+    # Overlay sombre pour améliorer la lisibilité du texte
+    overlay = pygame.Surface((screen_w, screen_h))
+    overlay.fill((0, 5, 20))
+    overlay.set_alpha(80)
+
+    # Police
+    pygame.font.init()
+    police = pygame.font.SysFont("Consolas", 18, bold=False)
+
+    fond_noir = pygame.Surface((screen_w, screen_h))
+    fond_noir.fill((0, 0, 0))
+
+    horloge = pygame.time.Clock()
+
+    # --- Fade In depuis le noir ---
+    alpha = 255
+    while alpha > 0:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return True
+        alpha -= 4
+        if alpha < 0: alpha = 0
+        fenetre.blit(fond, (0, 0))
+        fenetre.blit(overlay, (0, 0))
+        fond_noir.set_alpha(alpha)
+        fenetre.blit(fond_noir, (0, 0))
+        pygame.display.flip()
+        horloge.tick(60)
+
+    # --- Fade In de la boite de texte ---
+    alpha_boite = 0
+    while alpha_boite < 200:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: return False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE: return True
+        alpha_boite += 8
+        if alpha_boite > 200: alpha_boite = 200
+        fenetre.blit(fond, (0, 0))
+        fenetre.blit(overlay, (0, 0))
+        _dessiner_boite_texte(fenetre, police, [], alpha_boite)
+        pygame.display.flip()
+        horloge.tick(60)
+
+    # --- Affichage du monologue ligne par ligne ---
+    MAX_LIGNES_VISIBLES = 7
+    lignes_affichees = []
+    indice_ligne = 0
+    char_affiche = 0
+    compteur_frames = 0
+    FRAMES_PAR_CHAR = 3 # Un peu plus rapide pour le long texte de fin
+
+    while indice_ligne < len(CINEMATIQUE_NIVEAU_3_FIN):
+        ligne_courante = CINEMATIQUE_NIVEAU_3_FIN[indice_ligne]
+        ligne_complete = False
+
+        while not ligne_complete:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: return False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE: return True
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                        char_affiche = len(ligne_courante)
+
+            compteur_frames += 1
+            if compteur_frames >= FRAMES_PAR_CHAR:
+                compteur_frames = 0
+                if char_affiche < len(ligne_courante):
+                    c = ligne_courante[char_affiche]
+                    if c != " " and son_frappe: son_frappe.play()
+                char_affiche += 1
+            if char_affiche >= len(ligne_courante):
+                char_affiche = len(ligne_courante)
+                ligne_complete = True
+
+            texte_partiel = ligne_courante[:char_affiche]
+            lignes_visibles = lignes_affichees[-MAX_LIGNES_VISIBLES:]
+            lignes_a_montrer = (lignes_visibles + [texte_partiel])[-MAX_LIGNES_VISIBLES:]
+
+            fenetre.blit(fond, (0, 0))
+            fenetre.blit(overlay, (0, 0))
+            _dessiner_boite_texte(fenetre, police, lignes_a_montrer, 200)
+            pygame.display.flip()
+            horloge.tick(60)
+
+        lignes_affichees.append(ligne_courante)
+        char_affiche = 0
+        indice_ligne += 1
+
+        # Pause courte entre les lignes
+        pause = 100 if ligne_courante == "" else 400
+        temps = pygame.time.get_ticks()
+        attente = True
+        while attente and pygame.time.get_ticks() - temps < pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: return False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE: return True
+                    if event.key in [pygame.K_SPACE, pygame.K_RETURN]: attente = False
+            fenetre.blit(fond, (0, 0))
+            fenetre.blit(overlay, (0, 0))
+            _dessiner_boite_texte(fenetre, police, lignes_affichees[-MAX_LIGNES_VISIBLES:], 200)
+            pygame.display.flip()
+            horloge.tick(60)
+
+    # --- Attente finale ---
+    en_attente = True
+    while en_attente:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: return False
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                en_attente = False
+        fenetre.blit(fond, (0, 0))
+        fenetre.blit(overlay, (0, 0))
+        _dessiner_boite_texte(fenetre, police, lignes_affichees[-MAX_LIGNES_VISIBLES:], 200)
+        pygame.display.flip()
+        horloge.tick(60)
+
+    # --- Fade Out final ---
+    alpha = 0
+    while alpha < 255:
+        alpha += 5
+        if alpha > 255: alpha = 255
+        fenetre.blit(fond, (0, 0))
+        fond_noir.set_alpha(alpha)
+        fenetre.blit(fond_noir, (0, 0))
+        pygame.display.flip()
+        horloge.tick(60)
+
+    return True

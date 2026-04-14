@@ -846,6 +846,11 @@ class Game:
                 self.launch_snowball()
                 self.player.throw_ready = False
 
+            if self.boss is None:
+                from scenes.cutscene import cinematique_fin_jeu
+                cinematique_fin_jeu(self.fenetre)
+                return "menu"
+
             self.update_enemies()
 
             self.group.center(self.player.rect.center)
