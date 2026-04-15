@@ -135,20 +135,7 @@ Ice_Golem_Adventure/
 
 ---
 
-## 📸 Captures d'écran
 
-> 🖼️ *Voici un aperçu des différents écrans du jeu.*
-
-<!--
-Ajoutez vos captures ici au format :
-![Description](assets/screenshot_nom.png)
--->
-
-| Menu principal | Niveau 1 | Niveau 2 | Niveau 3 |
-|:-:|:-:|:-:|:-:|
-| ![Menu](assets/backgrounds/capture_menu.png) | *À venir* | *À venir* | *À venir* |
-
----
 
 ## 👥 L'Équipe — Ice Studio
 
