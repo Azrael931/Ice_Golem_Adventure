@@ -89,8 +89,7 @@ def menu_principal(fenetre):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                return
 
             # ---- ÉTAT MENU ----
             if etat == "menu":
@@ -100,12 +99,10 @@ def menu_principal(fenetre):
                         pygame.mixer.music.stop()
                         ok = cinematique_intro(fenetre)
                         if not ok:
-                            pygame.quit()
-                            sys.exit()
+                            return
                         result = lancer_niveau_1(fenetre, volume_actuel)
                         if not result:
-                            pygame.quit()
-                            sys.exit()
+                            return
                         # Retour au menu : relancer la musique avec le volume sauvegardé
                         pygame.mixer.music.load(musique_menu)
                         pygame.mixer.music.set_volume(volume_actuel)
@@ -126,12 +123,10 @@ def menu_principal(fenetre):
                         pygame.mixer.music.stop()
                         ok = cinematique_intro(fenetre)
                         if not ok:
-                            pygame.quit()
-                            sys.exit()
+                            return
                         result = lancer_niveau_1(fenetre, volume_actuel)
                         if not result:
-                            pygame.quit()
-                            sys.exit()
+                            return
                         pygame.mixer.music.load(musique_menu)
                         pygame.mixer.music.set_volume(volume_actuel)
                         pygame.mixer.music.play(-1)

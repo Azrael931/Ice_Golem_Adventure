@@ -180,8 +180,7 @@ def lancer_niveau_1(fenetre, volume_musique=0.5):
             from scenes.cutscene import cinematique_transition_niveau_1
             ok = cinematique_transition_niveau_1(fenetre)
             if not ok:
-                pygame.quit()
-                sys.exit()
+                return False
             from scenes.level2 import Game
             game = Game()
             game.run()

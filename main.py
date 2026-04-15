@@ -32,11 +32,12 @@ def executer_jeu():
 
     # Quitter proprement
     pygame.quit()
-    sys.exit()
 
 
 if __name__ == "__main__":
-    executer_jeu()
+    from bilan import bilan_carbone
+    bilan_carbone(executer_jeu)
+    sys.exit()
 
 
 
