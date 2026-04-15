@@ -180,6 +180,13 @@ class Game:
         self.fenetre = pygame.display.set_mode(Resolution)
         pygame.display.set_caption("Niveau 2 - Château")
 
+        # Lancement de la musique
+        music_path = os.path.join(os.path.dirname(__file__), "..", "assets", "audio", "musique_level2.mp3")
+        if os.path.exists(music_path):
+            pygame.mixer.music.load(music_path)
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
+
         tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "niveau2", "mapchateau.tmx")
         self.tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
         
@@ -259,13 +266,19 @@ class Game:
         while running:
             # ── EVENEMENTS ──────────────────────────────
             for event in pygame.event.get():
-                if event.type == pygame.QUIT: running = False
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE: running = False
+                if event.type == pygame.QUIT: 
+                    pygame.mixer.music.stop()
+                    running = False
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE: 
+                    pygame.mixer.music.stop()
+                    running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 3: self.player.attack1() # Click Droit
                     if event.button == 1: self.player.attack2() # Click Gauche
                 if event.type == pygame.JOYBUTTONDOWN:
-                    if event.button == 1 or event.button == 7: running = False  # B ou Start
+                    if event.button == 1 or event.button == 7: 
+                        pygame.mixer.music.stop()
+                        running = False  # B ou Start
                     if event.button == 2: self.player.attack1() # X (Carré)
                     if event.button == 3: self.player.attack2() # Y (Triangle)
 
@@ -334,6 +347,7 @@ class Game:
                 dist_joueur_portail = math.hypot(self.player.hitbox.centerx - self.rect_portail.centerx, 
                                                  self.player.hitbox.centery - self.rect_portail.centery)
                 if dist_joueur_portail < 80:
+                    pygame.mixer.music.stop()
                     from scenes.cutscene import cinematique_transition_niveau_2
                     ok = cinematique_transition_niveau_2(self.fenetre)
                     

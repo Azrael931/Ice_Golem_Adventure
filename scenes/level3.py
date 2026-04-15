@@ -513,6 +513,13 @@ class Game:
         self.fenetre = pygame.display.set_mode(Resolution)
         pygame.display.set_caption("Niveau 3 - Boss Fight")
 
+        # Lancement de la musique
+        music_path = os.path.join(os.path.dirname(__file__), "..", "assets", "audio", "musique_level3.mp3")
+        if os.path.exists(music_path):
+            pygame.mixer.music.load(music_path)
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
+
         tmx_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "niveau3", "mapfightfinalboss.tmx")
         self.tmx_data = pytmx.util_pygame.load_pygame(tmx_path)
 
@@ -897,10 +904,12 @@ class Game:
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
                     return "menu"
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        pygame.mixer.music.stop()
                         return "menu"
 
                     if event.key == pygame.K_e:
@@ -919,6 +928,7 @@ class Game:
 
                 if event.type == pygame.JOYBUTTONDOWN:
                     if event.button == 1 or event.button == 7:  # B ou Start
+                        pygame.mixer.music.stop()
                         return "menu"
                     if event.button == 0:  # A (Lancer la boule de neige)
                         self.player.start_throw()
@@ -961,6 +971,7 @@ class Game:
             self.handle_smoke_projectiles()
 
             if self.player.hp <= 0:
+                pygame.mixer.music.stop()
                 return cinematique_mort(self.fenetre)
 
             self.player.update()
@@ -971,6 +982,7 @@ class Game:
 
             if self.boss is None:
                 from scenes.cutscene import cinematique_fin_jeu
+                pygame.mixer.music.stop()
                 cinematique_fin_jeu(self.fenetre)
                 return "menu"
 
