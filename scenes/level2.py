@@ -324,7 +324,7 @@ class Game:
 
                 # Afficher indication si le joueur est proche (statue non déployée)
                 if not self.statues[n]["active"] and statue_mod.est_proche(self.player.hitbox, self.statues[n]["hitbox"], 150):
-                    txt_e = self.police.render("Poussez la statue", True, (220, 220, 255))
+                    txt_e = self.police.render("Poussez la statue", True, (0, 0, 0))
                     txt_x = self.statues[n]["rect"].centerx + offset_x - txt_e.get_width() // 2
                     txt_y = self.statues[n]["rect"].top + offset_y - 25
                     self.fenetre.blit(txt_e, (txt_x, txt_y))
