@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/ice_logo.png" alt="Ice Golem Adventure Logo" width="280"/>
+  <img src="assets/ui/ice_logo.png" alt="Ice Golem Adventure Logo" width="280"/>
 </p>
 
 <h1 align="center">❄️ Ice Golem Adventure ❄️</h1>
@@ -49,15 +49,15 @@ Sa dernière création ? **Imir**, un petit golem de glace inachevé, qui se ré
 >
 > 🎯 **Compétence éducative :** précision et patience
 
-### 🔮 Niveau 2 — L'Énigme des Miroirs *(vue de dessus / puzzle)*
-> Le joueur oriente des cristaux pour diriger un rayon lumineux vers un récepteur afin de réactiver les circuits énergétiques du laboratoire.
+### 🏰 Niveau 2 — Le Château *(vue de dessus / puzzle)*
+> Le joueur déplace Imir à travers le château et doit résoudre des énigmes impliquant le placement stratégique de statues sur des cibles pour débloquer la suite.
 >
-> 🎯 **Compétence éducative :** réflexion spatiale et résolution de problèmes
+> 🎯 **Compétence éducative :** réflexion spatiale, anticipation et résolution de problèmes
 
-### ⚔️ Niveau 3 — Le Combat Final *(vue de côté / boss fight)*
-> Affrontement contre **Smog** ! Le joueur lance des boules de neige selon des trajectoires balistiques précises en ajustant l'angle de tir pour toucher le boss.
+### ⚔️ Niveau 3 — Le Combat Final *(arène ouverte / boss fight)*
+> Affrontement final contre **Smog** et sa horde de monstres ! Dans une arène, le joueur doit esquiver les attaques, gérer ses lancers de boules de neige et frapper au corps à corps.
 >
-> 🎯 **Compétence éducative :** physique des trajectoires et logique de combat
+> 🎯 **Compétence éducative :** gestion de l'espace, réflexes et stratégie de combat
 
 ---
 
@@ -103,19 +103,18 @@ Ice_Golem_Adventure/
 ├── main.py                  # 🎬 Point d'entrée du jeu
 │
 ├── entities/                # 👾 Entités du jeu
-│   ├── boss.py              #    Boss final (Smog)
 │   ├── constante.py         #    Constantes globales (résolution, physique, vitesses…)
-│   ├── mirror.py            #    Cristaux/miroirs (niveau 2)
+│   ├── monster.py           #    Ennemis de base du jeu
 │   ├── platform_sol.py      #    Plateformes et sols
 │   ├── player_side.py       #    Joueur — vue de côté (platformer)
 │   ├── player_top.py        #    Joueur — vue de dessus (puzzle)
-│   └── projectile.py        #    Boules de neige (projectiles)
+│   └── statue.py            #    Mécanique de poussée des statues
 │
 ├── scenes/                  # 🎭 Scènes du jeu
 │   ├── cutscene.py          #    Cinématiques (logo, intro, game over…)
 │   ├── game_over.py         #    Écran de fin de partie
 │   ├── level1.py            #    Niveau 1 — Le Parcours
-│   ├── level2.py            #    Niveau 2 — L'Énigme des Miroirs
+│   ├── level2.py            #    Niveau 2 — Le Château
 │   ├── level3.py            #    Niveau 3 — Le Combat Final
 │   └── menu.py              #    Menu principal + paramètres
 │
