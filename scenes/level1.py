@@ -175,21 +175,17 @@ def lancer_niveau_1(fenetre, volume_musique=0.5):
             last_pos = pos_actuelle
 
         # ---- INTERACTION OBJET DE FIN ----
-        texte_indication = None
         if golem_rect.colliderect(objet_fin):
-            texte_indication = police.render("Appuyez sur 'E' pour entrer", True, (255, 255, 255))
-            touches = pygame.key.get_pressed()
-            if touches[pygame.K_e]:
-                pygame.mixer.music.stop()
-                from scenes.cutscene import cinematique_transition_niveau_1
-                ok = cinematique_transition_niveau_1(fenetre)
-                if not ok:
-                    pygame.quit()
-                    sys.exit()
-                from scenes.level2 import Game
-                game = Game()
-                game.run()
-                return False  # Quitte après level2
+            pygame.mixer.music.stop()
+            from scenes.cutscene import cinematique_transition_niveau_1
+            ok = cinematique_transition_niveau_1(fenetre)
+            if not ok:
+                pygame.quit()
+                sys.exit()
+            from scenes.level2 import Game
+            game = Game()
+            game.run()
+            return False  # Quitte après level2
 
         # ---- GESTION CAMERA ----
         camera_x = max(0, min(golem_rect.centerx - Resolution[0] // 2, largeur_niveau - Resolution[0]))
@@ -225,9 +221,7 @@ def lancer_niveau_1(fenetre, volume_musique=0.5):
         # Joueur
         afficher_joueur(fenetre, joueur, camera_x, camera_y)
 
-        # Indication texte
-        if texte_indication:
-            fenetre.blit(texte_indication, (golem_rect.x - camera_x - 30, golem_rect.y - camera_y - 30))
+
 
         # Barre de vie
         dessiner_barre_de_vie(fenetre, joueur)
