@@ -923,6 +923,21 @@ class Game:
                         self.player.attack_start_time = pygame.time.get_ticks()
                         self.player_attack_has_hit = False
 
+            if pygame.joystick.get_count() > 0:
+                joystick = pygame.joystick.Joystick(0)
+                num_axes = joystick.get_numaxes()
+                if num_axes >= 4:
+                    if num_axes >= 6:
+                        rx = joystick.get_axis(3)
+                        ry = joystick.get_axis(4)
+                    else:
+                        rx = joystick.get_axis(2)
+                        ry = joystick.get_axis(3)
+                        
+                    if abs(rx) > 0.2 or abs(ry) > 0.2:
+                        mx, my = pygame.mouse.get_pos()
+                        pygame.mouse.set_pos((int(mx + rx * 15), int(my + ry * 15)))
+
             self.move_player_level3()
 
             self.handle_player_melee_attacks()
