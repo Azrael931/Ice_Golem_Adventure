@@ -84,7 +84,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.current_animation[0]
         self.rect = self.image.get_rect()
 
-        self.position = [800, 800]
+        self.position = [500, 3150]
         self.rect.center = self.position
 
         self.hp = 100
@@ -561,6 +561,14 @@ class Game:
         pygame.font.init()
         self.police_boss = pygame.font.SysFont("Consolas", 22, bold=True)
 
+        portail_path = os.path.join(os.path.dirname(__file__), "..", "assets", "maps", "portail.png")
+        if os.path.exists(portail_path):
+            self.image_portail = pygame.image.load(portail_path).convert_alpha()
+            self.image_portail = pygame.transform.scale(self.image_portail, (120, 120))
+            self.rect_portail = self.image_portail.get_rect(center=(2705, 305))
+        else:
+            self.image_portail = None
+
     def spawn_monstres_aleatoires(self):
         i = 0
         essais_total = 0
@@ -939,6 +947,13 @@ class Game:
                         pygame.mouse.set_pos((int(mx + rx * 15), int(my + ry * 15)))
 
             self.move_player_level3()
+            
+            if getattr(self, "image_portail", None) is not None:
+                if self.player.hitbox.colliderect(self.rect_portail):
+                    self.player.position = [800, 800]
+                    self.player.update_hitbox()
+            
+            print("Joueur : x={}, y={}          ".format(int(self.player.position[0]), int(self.player.position[1])), end="\r")
 
             self.handle_player_melee_attacks()
             self.handle_snowballs()
@@ -965,6 +980,11 @@ class Game:
             self.group.draw(self.fenetre)
 
             offset_x, offset_y = self.group._map_layer.get_center_offset()
+
+            if getattr(self, "image_portail", None) is not None:
+                ecran_portail_x = self.rect_portail.x + offset_x
+                ecran_portail_y = self.rect_portail.y + offset_y
+                self.fenetre.blit(self.image_portail, (ecran_portail_x, ecran_portail_y))
 
             for snowball in self.snowballs:
                 snowball.draw(self.fenetre, offset_x, offset_y)
