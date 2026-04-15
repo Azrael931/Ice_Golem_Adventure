@@ -900,16 +900,19 @@ class Game:
         self.player.rect.center = self.player.position
 
     def run(self):
+        pygame.event.set_grab(True)
         running = True
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.mixer.music.stop()
+                    pygame.event.set_grab(False)
                     return "menu"
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.mixer.music.stop()
+                        pygame.event.set_grab(False)
                         return "menu"
 
                     if event.key == pygame.K_e:
@@ -929,6 +932,7 @@ class Game:
                 if event.type == pygame.JOYBUTTONDOWN:
                     if event.button == 1 or event.button == 7:  # B ou Start
                         pygame.mixer.music.stop()
+                        pygame.event.set_grab(False)
                         return "menu"
                     if event.button == 0:  # A (Lancer la boule de neige)
                         self.player.start_throw()
@@ -972,6 +976,7 @@ class Game:
 
             if self.player.hp <= 0:
                 pygame.mixer.music.stop()
+                pygame.event.set_grab(False)
                 return cinematique_mort(self.fenetre)
 
             self.player.update()
@@ -983,6 +988,7 @@ class Game:
             if self.boss is None:
                 from scenes.cutscene import cinematique_fin_jeu
                 pygame.mixer.music.stop()
+                pygame.event.set_grab(False)
                 cinematique_fin_jeu(self.fenetre)
                 return "menu"
 
